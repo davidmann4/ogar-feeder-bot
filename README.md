@@ -9,6 +9,11 @@
 * join the minimap server
 * node feeder.js GAME_ID
 
+#want to help out?
+* checkout issues for tasks
+* write better readme.md
+
+
 
 Disclaimer: 
 Botting is against the TOS - so please only use it on your own ogar server: https://github.com/OgarProject/Ogar
