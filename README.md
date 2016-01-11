@@ -1,13 +1,13 @@
 # agario-feeder-bot
 
 
-1.) go to https://github.com/dimotsai/agar-mini-map
-2.) install userscript in your browser
-3.) git clone https://github.com/dimotsai/agar-mini-map and run the server 
-4.) get https://github.com/pulviscriptor/agario-client and build it
-5.) join a game
-6.) join the minimap server
-7.) node feeder.js GAME_ID
+* go to https://github.com/dimotsai/agar-mini-map
+* install userscript in your browser
+* git clone https://github.com/dimotsai/agar-mini-map and run the server 
+* get https://github.com/pulviscriptor/agario-client and build it
+* join a game
+* join the minimap server
+* node feeder.js GAME_ID
 
 
 Disclaimer: 
