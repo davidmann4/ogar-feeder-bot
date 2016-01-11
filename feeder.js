@@ -268,7 +268,7 @@ for(proxy_line in lines) {
         }
         else {
             
-            var agant = null;
+            var agent = null;
         }
         //agent= null; // , agent: agent
         console.log('Requesting party server');
