@@ -5,7 +5,7 @@ var config = require('./config');
 
 var AgarioClient = require('agario-client');     //Use this in your scripts
 
-function ExampleBot(bot_id,agent,bot_number) {
+function ExampleBot(bot_id, agent, bot_number, server, key) {
     this.bot_id      = bot_id;         //ID of bot for logging
     this.nickname    = "austria" + bot_id;//'free cookies';//default nickname
     this.verbose     = true;           //default logging enabled
@@ -17,6 +17,8 @@ function ExampleBot(bot_id,agent,bot_number) {
     this.client       = new AgarioClient('Bot ' + this.bot_id); //create new client
     this.client.debug = 1; //lets set debug to 1
     this.client.agent = agent;
+    this.onboard_client(server, key, bot_number)
+
 }
 
 ExampleBot.prototype = {
@@ -24,6 +26,13 @@ ExampleBot.prototype = {
         if(this.verbose) {
             console.log(this.bot_id + ' says: ' + text);
         }
+    },
+
+    onboard_client: function(server, key, bot_number){
+        var bot = this;
+        setTimeout(function() {
+                bot.connect(server, key);
+        }, 1000 * bot_number);
     },
 
     connect: function(server, key) {
@@ -258,12 +267,21 @@ var bots_names = ['spy','obama','merkel','poland','austria'];
 
 var fs = require('fs');
 var lines = fs.readFileSync(config.proxies).toString().split("\n");
+var url = require('url');
 
 for(proxy_line in lines) {
+ if (proxy_line != process.argv[3]){continue;} //usefull for testing single proxies
+
  proxy = "http://" + lines[proxy_line];
  console.log(proxy);
     try{
-        var agent = HttpsProxyAgent(proxy);
+        var opts = url.parse(proxy);
+        agent = HttpsProxyAgent(opts);
+
+        if(lines[proxy_line] == "NOPROXY"){
+            agent = null;
+        }
+
         //agent= null; // , agent: agent
         console.log('Requesting party server');
         AgarioClient.servers.getPartyServer({region: 'EU-London', party_key: key, agent: agent}, function(srv) {
@@ -271,9 +289,8 @@ for(proxy_line in lines) {
             console.log('Engaging bots to party http://agar.io/#' + srv.key + ' on IP ' + srv.server);
             for(var bot_id in bots_names) {
                 bot_count++;
-                bots[bot_count] =  new ExampleBot(bot_count, agent, bot_count);             
-                bots[bot_count].connect('ws://' + srv.server, srv.key);   
-
+                bots[bot_count] =  new ExampleBot(bot_count, agent, bot_count, 'ws://' + srv.server, srv.key);                
+                       
             }              
         });
             
