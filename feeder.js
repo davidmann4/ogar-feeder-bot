@@ -263,7 +263,13 @@ for(proxy_line in lines) {
  proxy = "http://" + lines[proxy_line];
  console.log(proxy);
     try{
-        var agent = HttpsProxyAgent(proxy);
+        if (proxy != null) {
+            var agent = HttpsProxyAgent(proxy);
+        }
+        else {
+            
+            var agent = null;
+        }
         //agent= null; // , agent: agent
         console.log('Requesting party server');
         AgarioClient.servers.getPartyServer({region: 'EU-London', party_key: key, agent: agent}, function(srv) {
