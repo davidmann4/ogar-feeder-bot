@@ -270,19 +270,25 @@ var lines = fs.readFileSync(config.proxies).toString().split("\n");
 var url = require('url');
 
 for(proxy_line in lines) {
- if (proxy_line != process.argv[3]){continue;} //usefull for testing single proxies
+ if (process.argv[3] != null && proxy_line != process.argv[3]){continue;} //usefull for testing single proxies
 
  proxy = "http://" + lines[proxy_line];
  console.log(proxy);
     try{
+
         var opts = url.parse(proxy);
         agent = HttpsProxyAgent(opts);
+
+        if (proxy != null) {
+            var agent = HttpsProxyAgent(proxy);
+        }else {            
+            var agent = null;
+        }
 
         if(lines[proxy_line] == "NOPROXY"){
             agent = null;
         }
 
-        //agent= null; // , agent: agent
         console.log('Requesting party server');
         AgarioClient.servers.getPartyServer({region: 'EU-London', party_key: key, agent: agent}, function(srv) {
             if(!srv.server) return console.log('Failed to request server (error=' + srv.error + ', error_source=' + srv.error_source + ')');
