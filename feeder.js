@@ -304,6 +304,7 @@ for(proxy_line in lines) {
             }  
             
         }
+        else {
         console.log('Requesting party server');
         AgarioClient.servers.getPartyServer({region: 'EU-London', party_key: key, agent: agent}, function(srv) {
             if(!srv.server) return console.log('Failed to request server (error=' + srv.error + ', error_source=' + srv.error_source + ')');
@@ -314,6 +315,8 @@ for(proxy_line in lines) {
                        
             }              
         });
+            
+        }
             
         
     }catch(e){
