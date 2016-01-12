@@ -9,7 +9,14 @@ function ExampleBot(bot_id, agent, bot_number, server, key) {
     console.log(names.getRandomName());
 
     this.bot_id      = bot_id;         //ID of bot for logging
-    this.nickname    = names.getRandomName(); //'free cookies';//default nickname
+
+    if(config.useRandomSkinName){}
+        this.nickname = names.getRandomName(); 
+    }else{
+        this.nickname = config.useStaticName; 
+    }
+
+
     this.verbose     = true;           //default logging enabled
     this.interval_id = 0;              //here we will store setInterval's ID
 
@@ -19,6 +26,8 @@ function ExampleBot(bot_id, agent, bot_number, server, key) {
     this.client       = new AgarioClient('Bot ' + this.bot_id); //create new client
     this.client.debug = 1; //lets set debug to 1
     this.client.agent = agent;
+    this.client.headers['user-agent'] = config.userAgent;
+
     this.onboard_client(server, key, bot_number)
 
 }
