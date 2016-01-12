@@ -10,12 +10,11 @@ function ExampleBot(bot_id, agent, bot_number, server, key) {
 
     this.bot_id      = bot_id;         //ID of bot for logging
 
-    if(config.useRandomSkinName){}
+    if(config.useRandomSkinName){
         this.nickname = names.getRandomName(); 
     }else{
         this.nickname = config.useStaticName; 
     }
-
 
     this.verbose     = true;           //default logging enabled
     this.interval_id = 0;              //here we will store setInterval's ID
