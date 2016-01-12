@@ -1,13 +1,15 @@
 //Example of multiple connections in one script
 //This code is badly documented, please read basic.js in this folder if you don't understand this code
 var config = require('./config');
-var names = require('./names')
+var names = require('./names');
 
 var AgarioClient = require('agario-client');     //Use this in your scripts
 
 function ExampleBot(bot_id, agent, bot_number, server, key) {
+    console.log(names.getRandomName());
+
     this.bot_id      = bot_id;         //ID of bot for logging
-    this.nickname    = "austria" + bot_id;//'free cookies';//default nickname
+    this.nickname    = names.getRandomName(); //'free cookies';//default nickname
     this.verbose     = true;           //default logging enabled
     this.interval_id = 0;              //here we will store setInterval's ID
 
@@ -257,10 +259,8 @@ function getRandomLine(filename){
 
 key = process.argv[2];
 
-function getRandomName() {
-    var number = Math.floor((Math.random() * names.namesList.lenght) + 1);
-    return names.nameList[number];
-}
+
+
  //object of bots
 var bots = {
     "1" : null,
@@ -278,7 +278,7 @@ for(proxy_line in lines) {
 
  proxy = "http://" + lines[proxy_line];
  console.log(proxy);
-    try{
+    //try{
 
         var opts = url.parse(proxy);
         agent = HttpsProxyAgent(opts);
@@ -293,33 +293,27 @@ for(proxy_line in lines) {
             agent = null;
         }
 
-
-
         if(config.forceConnectToIp == true) {
             console.log("forcing connection to ws://" + config.forceIp + " with key " + config.forceKey + " .");
             for(var bot_id in bots_names) {
                 bot_count++;
-                bots[bot_count] =  new ExampleBot(bot_count, agent, bot_count, 'ws://' + config.forceIp, config.forceKey);                
-                       
+                bots[bot_count] =  new ExampleBot(bot_count, agent, bot_count, 'ws://' + config.forceIp, config.forceKey);                  
             }  
             
-        }
-        else {
-        console.log('Requesting party server');
-        AgarioClient.servers.getPartyServer({region: 'EU-London', party_key: key, agent: agent}, function(srv) {
-            if(!srv.server) return console.log('Failed to request server (error=' + srv.error + ', error_source=' + srv.error_source + ')');
-            console.log('Engaging bots to party http://agar.io/#' + srv.key + ' on IP ' + srv.server);
-            for(var bot_id in bots_names) {
-                bot_count++;
-                bots[bot_count] =  new ExampleBot(bot_count, agent, bot_count, 'ws://' + srv.server, srv.key);                
-                       
-            }              
-        });
-            
-        }
-            
+        }else{
+            console.log('Requesting party server');
+            AgarioClient.servers.getPartyServer({region: 'EU-London', party_key: key, agent: agent}, function(srv) {
+                if(!srv.server) return console.log('Failed to request server (error=' + srv.error + ', error_source=' + srv.error_source + ')');
+                console.log('Engaging bots to party http://agar.io/#' + srv.key + ' on IP ' + srv.server);
+                for(var bot_id in bots_names) {
+                    bot_count++;
+                    bots[bot_count] =  new ExampleBot(bot_count, agent, bot_count, 'ws://' + srv.server, srv.key);                
+                           
+                }              
+            });            
+        }            
         
-    }catch(e){
-        console.log('error on startup');
-    }
+    //}catch(e){
+    //    console.log('error on startup: ' + e);
+    //}
 }
