@@ -299,7 +299,7 @@ for(proxy_line in lines) {
             console.log("forcing connection to ws://" + config.forceIp + " with key " + config.forceKey + " .");
             for(var bot_id in bots_names) {
                 bot_count++;
-                bots[bot_count] =  new ExampleBot(bot_count, agent, bot_count, 'ws://' + config.forceIp, config.ForceKey);                
+                bots[bot_count] =  new ExampleBot(bot_count, agent, bot_count, 'ws://' + config.forceIp, config.forceKey);                
                        
             }  
             
