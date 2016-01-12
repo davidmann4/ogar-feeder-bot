@@ -287,6 +287,7 @@ for(proxy_line in lines) {
 
         if(lines[proxy_line] == "NOPROXY"){
             agent = null;
+			console.log("NoProxy loaded.");
         }
 
         console.log('Requesting party server');
@@ -302,6 +303,13 @@ for(proxy_line in lines) {
             
         
     }catch(e){
-        console.log('error on startup');
+        console.log('error on startup: ' + e);
+		console.log("connecting to ws://127.0.0.1:443");
+		
+        for(var bot_id in bots_names) {
+            bot_count++;
+            bots[bot_count] =  new ExampleBot(bot_count, agent, bot_count, 'ws://' + "127.0.0.1:443");                
+                   
+        }     
     }
 }
