@@ -1,7 +1,7 @@
 //Example of multiple connections in one script
 //This code is badly documented, please read basic.js in this folder if you don't understand this code
 var config = require('./config');
-
+var names = require('./names')
 
 var AgarioClient = require('agario-client');     //Use this in your scripts
 
@@ -257,6 +257,10 @@ function getRandomLine(filename){
 
 key = process.argv[2];
 
+function getRandomName() {
+    var number = Math.floor((Math.random() * names.namesList.lenght) + 1);
+    return names.nameList[number];
+}
  //object of bots
 var bots = {
     "1" : null,
