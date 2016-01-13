@@ -288,11 +288,10 @@ for(proxy_line in lines) {
  console.log(proxy);
     //try{
 
-        var opts = url.parse(proxy);
-        agent = HttpsProxyAgent(opts);
+        var opts = url.parse(proxy);        
 
         if (proxy != null) {
-            var agent = HttpsProxyAgent(proxy);
+            agent = HttpsProxyAgent(opts);
         }else {            
             var agent = null;
         }
