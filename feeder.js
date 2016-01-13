@@ -282,6 +282,7 @@ var lines = fs.readFileSync(config.proxies).toString().split("\n");
 var url = require('url');
 
 for(proxy_line in lines) {
+ if (lines[proxy_line][0] == "#"){continue;}
  if (process.argv[3] != null && proxy_line != process.argv[3]){continue;} //usefull for testing single proxies
 
  proxy = "http://" + lines[proxy_line];
