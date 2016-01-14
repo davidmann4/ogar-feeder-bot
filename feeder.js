@@ -149,7 +149,7 @@ ExampleBot.prototype = {
         if(!candidate_ball) return;
 
         //bot.log('closest ' + candidate_ball + ', distance ' + candidate_distance);
-        if(valid_player_pos!=null){
+        if(valid_player_pos!=null && my_ball.mass > config.minimumMassBeforeFeed){
             candidate_ball.x = valid_player_pos["x"];
             candidate_ball.y = valid_player_pos["y"];
         }
