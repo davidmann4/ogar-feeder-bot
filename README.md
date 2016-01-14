@@ -1,5 +1,6 @@
 # agario-feeder-bot
 
+if you use this bot make sure to star the repo!
 
 * go to https://github.com/dimotsai/agar-mini-map
 * install userscript in your browser
