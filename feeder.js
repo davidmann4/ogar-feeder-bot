@@ -6,8 +6,6 @@ var names = require('./names');
 var AgarioClient = require('agario-client');     //Use this in your scripts
 
 function ExampleBot(bot_id, agent, bot_number, server, key) {
-    console.log(names.getRandomName());
-
     this.bot_id      = bot_id;         //ID of bot for logging
 
     if(config.useRandomSkinName){
@@ -282,12 +280,13 @@ var lines = fs.readFileSync(config.proxies).toString().split("\n");
 var url = require('url');
 
 for(proxy_line in lines) {
- if (lines[proxy_line][0] == "#"){continue;}
+ if (lines[proxy_line][0] == "#" || lines[proxy_line].length < 8){continue;}
  if (process.argv[3] != null && proxy_line != process.argv[3]){continue;} //usefull for testing single proxies
 
  proxy = "http://" + lines[proxy_line];
  console.log(proxy);
-    //try{
+
+    try{
 
         var opts = url.parse(proxy);        
 
@@ -321,7 +320,7 @@ for(proxy_line in lines) {
             });            
         }            
         
-    //}catch(e){
-    //    console.log('error on startup: ' + e);
-    //}
+    }catch(e){
+        console.log('error on startup: ' + e);
+    }
 }
