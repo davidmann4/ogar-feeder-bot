@@ -12,6 +12,9 @@
 #want to help out?
 * checkout issues for tasks
 * write better readme.md
+* tell other people about this repo (marketing)
+* get more developers to contribute code
+* generate backlinks for SEO to this repo (post link to this repo on other sites)
 
 
 
