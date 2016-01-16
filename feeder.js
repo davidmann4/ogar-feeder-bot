@@ -28,6 +28,8 @@ function FeederBot(bot_id, agent, bot_number, server, auth_token) {
     this.client.auth_token = auth_token;
     this.client.headers['user-agent'] = config.userAgent;
 
+    this.isOnFeedMission = false;
+
     this.onboard_client(server, bot_number)
 
 }
@@ -103,6 +105,7 @@ FeederBot.prototype = {
         bot.client.on('lostMyBalls', function() {
             bot.log('Lost all my balls, respawning');
             bot.client.spawn(bot.nickname);
+            bot.isOnFeedMission = false;
         });
 
         bot.client.on('disconnect', function() {
@@ -167,6 +170,18 @@ FeederBot.prototype = {
         var my_ball = bot.client.balls[ bot.client.my_balls[0] ];
         if(!my_ball) return;
 
+        if(bot.isOnFeedMission == true){
+            bot.client.moveTo(valid_player_pos["x"], valid_player_pos["y"]);
+
+            if(bot.playerInRange(my_ball, valid_player_pos["x"], valid_player_pos["y"],valid_player_pos.size, 400)){
+                if ( bot.canSplitFeedPlayer(my_ball.mass, valid_player_pos.size) ){
+                    bot.client.split();
+                }
+            }
+
+            return
+        }
+
         for(var ball_id in bot.client.balls) {
             var ball = bot.client.balls[ball_id];
             if(ball.virus){
@@ -201,16 +216,9 @@ FeederBot.prototype = {
             if(!got_tranporter || 
                 bot.getDistanceBetweenBalls(candidate_ball, my_ball) >
                 bot.getDistanceBetweenBallAndPosition(my_ball, valid_player_pos["x"], valid_player_pos["y"])
-                ){      
-                candidate_ball = my_ball;          
-                candidate_ball.x = valid_player_pos["x"];
-                candidate_ball.y = valid_player_pos["y"];     
-            }
-
-            if(bot.playerInRange(my_ball, valid_player_pos["x"], valid_player_pos["y"],valid_player_pos.size, 400)){
-                if ( bot.canSplitFeedPlayer(my_ball.mass, valid_player_pos.size) ){
-                    bot.client.split();
-                }
+                ){
+                bot.isOnFeedMission = true;
+                return;      
             }
         }
 
