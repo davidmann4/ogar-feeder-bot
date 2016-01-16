@@ -21,7 +21,6 @@ function FeederBot(bot_id, agent, bot_number, server) {
     this.ball_id = null;
 
     this.server     = '';   //server address will be stored here
-    this.server_key = '';   //server key will be stored here
 
     this.client       = new AgarioClient('Bot ' + this.bot_id); //create new client
     this.client.debug = 0;
@@ -65,13 +64,7 @@ FeederBot.prototype = {
 
         bot.client.on('connectionError', function(e) {
             bot.log('Connection failed with reason: ' + e);
-            bot.log('Server address set to: ' + bot.server + ' key ' + bot.server_key);
-
-            /*
-            setTimeout(function() {
-                bot.connect(bot.server,bot.key);
-            }, 3000);
-            */
+            bot.log('Server address set to: ' + bot.server );
         });
 
 
@@ -325,6 +318,9 @@ function miniMapConnectToServer() {
     }
 
 miniMapConnectToServer();
+
+
+
 fs = require('fs');
 var HttpsProxyAgent = require('https-proxy-agent');
 
@@ -337,15 +333,12 @@ function getRandomLine(filename){
 
 
 
-key = process.argv[2];
-
-
-
  //object of bots
 var bots = {
     "1" : null,
     "2" : null,
 };
+
 bot_count = 0;
 var bots_names = ['spy','obama','merkel','poland','austria'];
 
@@ -378,7 +371,7 @@ for(proxy_line in lines) {
         console.log("forcing connection to ws://" + config.gameServerIp);
         for(var bot_id in bots_names) {
             bot_count++;
-            bots[bot_count] =  new FeederBot(bot_count, agent, bot_count, 'ws://' + config.forceIp);                  
+            bots[bot_count] =  new FeederBot(bot_count, agent, bot_count, 'ws://' + config.gameServerIp);                  
         }             
 
     }catch(e){
