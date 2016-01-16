@@ -365,7 +365,7 @@ if(config.useFacebookAuth){
 
 
 for(proxy_line in lines) {
- if (lines[proxy_line][0] == "#" || lines[proxy_line].length < 8){continue;}
+ if (lines[proxy_line][0] == "#" || lines[proxy_line].length < 3){continue;}
  if (process.argv[3] != null && proxy_line != process.argv[3]){continue;} //usefull for testing single proxies
 
  proxy = "http://" + lines[proxy_line];
