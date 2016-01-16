@@ -19,4 +19,13 @@ config.gameServerIp = "127.0.0.1:443"
 //if you want that the bot collects mass before it moves to your position adjust this value
 config.minimumMassBeforeFeed = 0;
 
+
+// use Facebook Auth
+config.useFacebookAuth = false;
+config.account = {};
+config.account.c_user = ""; // set to cookie "c_user" from http://www.facebook.com/
+config.account.datr = ""; // set to cookie "datr" from http://www.facebook.com/
+config.account.xs = ""; // set to cookie "xs" from http://www.facebook.com/
+
+
 module.exports = config;

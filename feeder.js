@@ -5,7 +5,7 @@ var names = require('./names');
 
 var AgarioClient = require('agario-client');     //Use this in your scripts
 
-function FeederBot(bot_id, agent, bot_number, server) {
+function FeederBot(bot_id, agent, bot_number, server, auth_token) {
     this.bot_id      = bot_id;         //ID of bot for logging
 
     if(config.useRandomSkinName){
@@ -25,6 +25,7 @@ function FeederBot(bot_id, agent, bot_number, server) {
     this.client       = new AgarioClient('Bot ' + this.bot_id); //create new client
     this.client.debug = 0;
     this.client.agent = agent;
+    this.client.auth_token = auth_token;
     this.client.headers['user-agent'] = config.userAgent;
 
     this.onboard_client(server, bot_number)
@@ -346,6 +347,23 @@ var fs = require('fs');
 var lines = fs.readFileSync(config.proxies).toString().split("\n");
 var url = require('url');
 
+var auth_token = null;
+
+if(config.useFacebookAuth){
+    var account = new AgarioClient.Account();
+
+    account.c_user = config.account.c_user = ""; 
+    account.datr = config.account.datr = ""; 
+    account.xs = config.account.xs = ""; 
+
+    account.requestFBToken(function(token, info) {
+        auth_token = token;
+    });
+
+}
+
+
+
 for(proxy_line in lines) {
  if (lines[proxy_line][0] == "#" || lines[proxy_line].length < 8){continue;}
  if (process.argv[3] != null && proxy_line != process.argv[3]){continue;} //usefull for testing single proxies
@@ -371,7 +389,7 @@ for(proxy_line in lines) {
         console.log("forcing connection to ws://" + config.gameServerIp);
         for(var bot_id in bots_names) {
             bot_count++;
-            bots[bot_count] =  new FeederBot(bot_count, agent, bot_count, 'ws://' + config.gameServerIp);                  
+            bots[bot_count] =  new FeederBot(bot_count, agent, bot_count, 'ws://' + config.gameServerIp, auth_token);                  
         }             
 
     }catch(e){
