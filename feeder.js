@@ -5,7 +5,7 @@ var names = require('./names');
 
 var AgarioClient = require('agario-client');     //Use this in your scripts
 
-function ExampleBot(bot_id, agent, bot_number, server, key) {
+function FeederBot(bot_id, agent, bot_number, server, key) {
     this.bot_id      = bot_id;         //ID of bot for logging
 
     if(config.useRandomSkinName){
@@ -15,7 +15,7 @@ function ExampleBot(bot_id, agent, bot_number, server, key) {
     }
 
 
-    this.verbose     = false;           //default logging enabled
+    this.verbose = config.verbose;           //default logging enabled
     this.interval_id = 0;              //here we will store setInterval's ID
 
     this.ball_id = null;
@@ -32,7 +32,7 @@ function ExampleBot(bot_id, agent, bot_number, server, key) {
 
 }
 
-ExampleBot.prototype = {
+FeederBot.prototype = {
     log: function(text) {
         if(this.verbose) {
             console.log(this.bot_id + ' says: ' + text);
@@ -378,7 +378,7 @@ for(proxy_line in lines) {
             console.log("forcing connection to ws://" + config.forceIp + " with key " + config.forceKey + " .");
             for(var bot_id in bots_names) {
                 bot_count++;
-                bots[bot_count] =  new ExampleBot(bot_count, agent, bot_count, 'ws://' + config.forceIp, config.forceKey);                  
+                bots[bot_count] =  new FeederBot(bot_count, agent, bot_count, 'ws://' + config.forceIp, config.forceKey);                  
             }  
             
         }else{
@@ -388,7 +388,7 @@ for(proxy_line in lines) {
                 console.log('Engaging bots to party http://agar.io/#' + srv.key + ' on IP ' + srv.server);
                 for(var bot_id in bots_names) {
                     bot_count++;
-                    bots[bot_count] =  new ExampleBot(bot_count, agent, bot_count, 'ws://' + srv.server, srv.key);                
+                    bots[bot_count] =  new FeederBot(bot_count, agent, bot_count, 'ws://' + srv.server, srv.key);                
                            
                 }              
             });            

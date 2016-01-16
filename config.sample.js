@@ -1,5 +1,8 @@
 var config = {};
 
+// if you see to much output on your console turn this to false
+config.verbose = true; 
+
 config.userAgent = 'agario-feeder-bot';
 config.mapserver = "ws://127.0.0.1:34343";
 
