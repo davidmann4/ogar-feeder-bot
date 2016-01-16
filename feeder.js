@@ -14,14 +14,17 @@ function ExampleBot(bot_id, agent, bot_number, server, key) {
         this.nickname = config.useStaticName; 
     }
 
-    this.verbose     = true;           //default logging enabled
+
+    this.verbose     = false;           //default logging enabled
     this.interval_id = 0;              //here we will store setInterval's ID
+
+    this.ball_id = null;
 
     this.server     = '';   //server address will be stored here
     this.server_key = '';   //server key will be stored here
 
     this.client       = new AgarioClient('Bot ' + this.bot_id); //create new client
-    this.client.debug = 1; //lets set debug to 1
+    this.client.debug = 0;
     this.client.agent = agent;
     this.client.headers['user-agent'] = config.userAgent;
 
@@ -119,7 +122,49 @@ ExampleBot.prototype = {
     },
 
     getDistanceBetweenBalls: function(ball_1, ball_2) {
-        return Math.sqrt( Math.pow( ball_1.x - ball_2.x, 2) + Math.pow( ball_2.y - ball_1.y, 2) );
+        return this.getDistanceBetweenBallAndPosition(ball_1, ball_2.x, ball_2.y);
+    },
+
+    getDistanceBetweenBallAndPosition:function(ball_1, x, y) {
+        return Math.sqrt( Math.pow( ball_1.x - x, 2) + Math.pow( y - ball_1.y, 2) );
+    },
+
+    getAvailableTransporter:function() {
+        var bot = this;
+        var my_ball = bot.client.balls[ bot.client.my_balls[0] ];
+        if(!my_ball) return;
+
+        possible_transporter = null
+
+        for(var bot_id in bots) {
+            ball_id = bots[bot_id].id    
+            bot_ball = bots[bot_id].client.balls[bots[bot_id].client.my_balls[0]];   
+            if(!bot_ball) continue;        
+            if(bot.getDistanceBetweenBallAndPosition(my_ball,  bot_ball.x,  bot_ball.y) > 2000){continue;}
+            if(bot.getDistanceBetweenBallAndPosition(my_ball,  bot_ball) > bot.getDistanceBetweenBallAndPosition(my_ball,  possible_transporter) ){continue;}
+            if(my_ball.size/bot_ball.size > 0.8) continue;
+
+            possible_transporter = bot_ball;                
+        }
+    
+        return possible_transporter;
+    },
+
+
+    getMassPixelRadius:function(mass){
+        return Math.ceil(Math.sqrt(100 * mass));
+    },
+
+    canSplitFeedPlayer:function(botMass, otherMass){
+        requiredMass = otherMass + ((otherMass/100) * 20);
+        return requiredMass < botMass
+    },
+
+    playerInRange:function(my_ball, playerX, playerY, playerSize, range){
+        var bot = this;
+        bot_distance = bot.getDistanceBetweenBallAndPosition(my_ball, playerX, playerY) - bot.getMassPixelRadius(valid_player_pos.size)
+        ditance_needed = range //400 - bot.getMassPixelRadius(my_ball.size);
+        return bot_distance < ditance_needed; 
     },
 
     recalculateTarget: function() {
@@ -132,7 +177,7 @@ ExampleBot.prototype = {
         for(var ball_id in bot.client.balls) {
             var ball = bot.client.balls[ball_id];
             if(ball.virus){
-                //console.log("player spotted");                
+                //console.log("player spotted");            
                 continue;
             }
             if(!ball.visible) continue;
@@ -144,15 +189,44 @@ ExampleBot.prototype = {
             candidate_ball = ball;
             candidate_distance = bot.getDistanceBetweenBalls(ball, my_ball);
         }
-        if(!candidate_ball) return;
-
-        //bot.log('closest ' + candidate_ball + ', distance ' + candidate_distance);
-        if(valid_player_pos!=null && my_ball.mass > config.minimumMassBeforeFeed){
-            candidate_ball.x = valid_player_pos["x"];
-            candidate_ball.y = valid_player_pos["y"];
+        
+        got_tranporter= false;
+        transporter = bot.getAvailableTransporter();
+        if(transporter != null){
+            candidate_ball = transporter;
+            got_tranporter = true;
         }
 
-        bot.client.moveTo(candidate_ball.x, candidate_ball.y);
+        if( valid_player_pos!=null 
+            && my_ball.mass > config.minimumMassBeforeFeed){
+            candidate_ball.x = valid_player_pos["x"];
+            candidate_ball.y = valid_player_pos["y"];            
+        }
+
+        if( valid_player_pos!=null && bot.playerInRange(my_ball, valid_player_pos["x"], valid_player_pos["y"],valid_player_pos.size, 1000) ){
+
+            if(!got_tranporter || 
+                bot.getDistanceBetweenBalls(candidate_ball, my_ball) >
+                bot.getDistanceBetweenBallAndPosition(my_ball, valid_player_pos["x"], valid_player_pos["y"])
+                ){
+                candidate_ball.x = valid_player_pos["x"];
+                candidate_ball.y = valid_player_pos["y"];     
+            }
+
+            if(bot.playerInRange(my_ball, valid_player_pos["x"], valid_player_pos["y"],valid_player_pos.size, 400)){
+                if ( bot.canSplitFeedPlayer(my_ball.mass, valid_player_pos.size) ){
+                    bot.client.split();
+                }
+            }
+        }
+
+        if(candidate_ball == null){
+            bot.client.moveTo(valid_player_pos["x"], valid_player_pos["y"]);
+        }else{
+            bot.client.moveTo(candidate_ball.x, candidate_ball.y);
+        }
+
+        
     }
 };
 
