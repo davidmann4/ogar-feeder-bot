@@ -8,7 +8,8 @@ if you use this bot make sure to star the repo!
 * get https://github.com/pulviscriptor/agario-client and build it ( npm install agario-client )
 * join a game
 * join the minimap server
-* node feeder.js GAME_ID
+* F12 -> Console (Take IP GameServer from: "Connecting to ws://XXXX" and update config) <chorme>
+* node feeder.js
 
 #want to help out?
 * checkout issues for tasks
