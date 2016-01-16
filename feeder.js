@@ -5,7 +5,7 @@ var names = require('./names');
 
 var AgarioClient = require('agario-client');     //Use this in your scripts
 
-function FeederBot(bot_id, agent, bot_number, server, key) {
+function FeederBot(bot_id, agent, bot_number, server) {
     this.bot_id      = bot_id;         //ID of bot for logging
 
     if(config.useRandomSkinName){
@@ -15,7 +15,7 @@ function FeederBot(bot_id, agent, bot_number, server, key) {
     }
 
 
-    this.verbose = config.verbose;           //default logging enabled
+    this.verbose = config.verbose; 
     this.interval_id = 0;              //here we will store setInterval's ID
 
     this.ball_id = null;
@@ -28,7 +28,7 @@ function FeederBot(bot_id, agent, bot_number, server, key) {
     this.client.agent = agent;
     this.client.headers['user-agent'] = config.userAgent;
 
-    this.onboard_client(server, key, bot_number)
+    this.onboard_client(server, bot_number)
 
 }
 
@@ -39,18 +39,17 @@ FeederBot.prototype = {
         }
     },
 
-    onboard_client: function(server, key, bot_number){
+    onboard_client: function(server, bot_number){
         var bot = this;
         setTimeout(function() {
-                bot.connect(server, key);
+                bot.connect(server);
         }, 1000 * bot_number);
     },
 
-    connect: function(server, key) {
-        this.log('Connecting to ' + server + ' with key ' + key);
+    connect: function(server) {
+        this.log('Connecting to ' + server);
         this.server = server;
-        this.server_key = key;
-        this.client.connect(server, key);
+        this.client.connect(server);
         this.attachEvents();
     },
 
@@ -208,7 +207,8 @@ FeederBot.prototype = {
             if(!got_tranporter || 
                 bot.getDistanceBetweenBalls(candidate_ball, my_ball) >
                 bot.getDistanceBetweenBallAndPosition(my_ball, valid_player_pos["x"], valid_player_pos["y"])
-                ){
+                ){      
+                candidate_ball = my_ball;          
                 candidate_ball.x = valid_player_pos["x"];
                 candidate_ball.y = valid_player_pos["y"];     
             }
@@ -374,26 +374,13 @@ for(proxy_line in lines) {
             agent = null;
         }
 
-        if(config.forceConnectToIp == true) {
-            console.log("forcing connection to ws://" + config.forceIp + " with key " + config.forceKey + " .");
-            for(var bot_id in bots_names) {
-                bot_count++;
-                bots[bot_count] =  new FeederBot(bot_count, agent, bot_count, 'ws://' + config.forceIp, config.forceKey);                  
-            }  
-            
-        }else{
-            console.log('Requesting party server');
-            AgarioClient.servers.getPartyServer({region: 'EU-London', party_key: key, agent: agent}, function(srv) {
-                if(!srv.server) return console.log('Failed to request server (error=' + srv.error + ', error_source=' + srv.error_source + ')');
-                console.log('Engaging bots to party http://agar.io/#' + srv.key + ' on IP ' + srv.server);
-                for(var bot_id in bots_names) {
-                    bot_count++;
-                    bots[bot_count] =  new FeederBot(bot_count, agent, bot_count, 'ws://' + srv.server, srv.key);                
-                           
-                }              
-            });            
-        }            
         
+        console.log("forcing connection to ws://" + config.gameServerIp);
+        for(var bot_id in bots_names) {
+            bot_count++;
+            bots[bot_count] =  new FeederBot(bot_count, agent, bot_count, 'ws://' + config.forceIp);                  
+        }             
+
     }catch(e){
         console.log('error on startup: ' + e);
     }

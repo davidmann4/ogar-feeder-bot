@@ -13,10 +13,8 @@ config.proxies = "proxy.txt";
 config.useRandomSkinName = true;
 config.useStaticName = "austria";
 
-// if you want to connect to a specific server set this value to true
-config.forceConnectToIp = false;
-config.forceIp = "127.0.0.1:443"
-config.forceKey = "";
+// set this ip to your Ogar Server ip - make sure to disable Scamble
+config.gameServerIp = "127.0.0.1:443"
 
 //if you want that the bot collects mass before it moves to your position adjust this value
 config.minimumMassBeforeFeed = 0;
