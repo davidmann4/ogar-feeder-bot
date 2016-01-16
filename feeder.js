@@ -170,7 +170,7 @@ FeederBot.prototype = {
         var my_ball = bot.client.balls[ bot.client.my_balls[0] ];
         if(!my_ball) return;
 
-        if(bot.isOnFeedMission == true){
+        if(valid_player_pos != null && bot.isOnFeedMission == true){
             bot.client.moveTo(valid_player_pos["x"], valid_player_pos["y"]);
 
             if(bot.playerInRange(my_ball, valid_player_pos["x"], valid_player_pos["y"],valid_player_pos.size, 400)){
