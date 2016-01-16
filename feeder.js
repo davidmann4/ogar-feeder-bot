@@ -207,8 +207,8 @@ FeederBot.prototype = {
 
         if( valid_player_pos!=null 
             && my_ball.mass > config.minimumMassBeforeFeed){
-            candidate_ball.x = valid_player_pos["x"];
-            candidate_ball.y = valid_player_pos["y"];            
+            bot.isOnFeedMission = true;
+            return;             
         }
 
         if( valid_player_pos!=null && bot.playerInRange(my_ball, valid_player_pos["x"], valid_player_pos["y"],valid_player_pos.size, 1000) ){
