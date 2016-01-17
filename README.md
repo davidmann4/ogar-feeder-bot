@@ -1,6 +1,6 @@
 # agario-feeder-bot
 
-skype group: https://join.skype.com/ligwfjW8Smb5
+skype group: https://join.skype.com/eQuN52iQVzZg
 
 if you use this bot make sure to star the repo!
 
