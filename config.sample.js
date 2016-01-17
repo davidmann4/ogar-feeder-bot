@@ -1,4 +1,6 @@
 var config = {};
+config.account = {};
+
 
 // if you see to much output on your console turn this to false
 config.verbose = true; 
@@ -22,7 +24,9 @@ config.minimumMassBeforeFeed = 0;
 
 // use Facebook Auth
 config.useFacebookAuth = false;
-config.account = {};
+config.account.token = ""; // put your auth token here
+
+// you also can generate your token through fb data - NOTE: this gets overwritten if you use account.token
 config.account.c_user = ""; // set to cookie "c_user" from http://www.facebook.com/
 config.account.datr = ""; // set to cookie "datr" from http://www.facebook.com/
 config.account.xs = ""; // set to cookie "xs" from http://www.facebook.com/

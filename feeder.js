@@ -370,6 +370,10 @@ if(config.useFacebookAuth){
 
 }
 
+if(config.account.token != ""){
+    auth_token = config.account.token;
+}
+
 
 
 for(proxy_line in lines) {
