@@ -1,35 +1,44 @@
+// IGNORE THESE
 var config = {};
 config.account = {};
+// END OF IGNORE
 
-
-// if you see to much output on your console turn this to false
+// To remove lot's of output
 config.verbose = true; 
 
+// Useragent the bot will use
 config.userAgent = 'agario-feeder-bot';
+
+// Mini-map server to connect to
 config.mapserver = "ws://127.0.0.1:34343";
 
-//location of your proxy files with HTTP proxies (socks proxies do not work yet!)
+// Location of your proxy files with HTTP proxies (Sock proxies not supported yet!)
 config.proxies = "proxy.txt";
 
-//set useRandomSkinName to false to always use the staticName
+// Set to true to use random name
 config.useRandomSkinName = true;
+// If above is false, us this skin name
 config.useStaticName = "austria";
 
-// set this ip to your Ogar Server ip - make sure to disable Scamble
+// Set this to the server IP (Agar or Ogar server IP).
 config.gameServerIp = "127.0.0.1:443"
 
-//if you want that the bot collects mass before it moves to your position adjust this value
+// Edit this value so bots collect mass before coming towards the player
 config.minimumMassBeforeFeed = 0;
 
-
-// use Facebook Auth
+// Facebook authentication
 config.useFacebookAuth = false;
-config.account.token = ""; // put your auth token here
+// Auth token
+config.account.token = "";
 
-// you also can generate your token through fb data - NOTE: this gets overwritten if you use account.token
-config.account.c_user = ""; // set to cookie "c_user" from http://www.facebook.com/
-config.account.datr = ""; // set to cookie "datr" from http://www.facebook.com/
-config.account.xs = ""; // set to cookie "xs" from http://www.facebook.com/
+// You can also generate your own token through Facebook Data. (This will get overwritten if you use account.token)
+// Cookie from "c_user" at http://facebook.com
+config.account.c_user = "";
+// Cookie from "datr" at http://facebook.com
+config.account.datr = "";
+// Cookie from "xs" at http://facebook.com
+config.account.xs = "";
 
-
+// IGNORE THIS
 module.exports = config;
+// END OF IGNORE

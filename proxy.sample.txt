@@ -1,6 +1,6 @@
 # agario-feeder-bot uses http proxies
 # each line will try to connect 5 clients
-# if you put in a line with NOPROXY no proxy will be used for this 5 clients
+# if you put in a line with NOPROXY, the server itself will be used for 5 clients
 NOPROXY
 11.222.333.444:8080
 12.222.333.445:8080
