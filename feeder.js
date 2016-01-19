@@ -366,9 +366,9 @@ var auth_token = null;
 if (config.useFacebookAuth) {
     var account = new AgarioClient.Account();
 
-    account.c_user = config.account.c_user = "";
-    account.datr = config.account.datr = "";
-    account.xs = config.account.xs = "";
+    account.c_user = config.account.c_user;
+    account.datr = config.account.datr;
+    account.xs = config.account.xs;
 
     account.requestFBToken(function(token, info) {
         auth_token = token;
