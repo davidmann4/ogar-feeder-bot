@@ -28,16 +28,12 @@ config.minimumMassBeforeFeed = 0;
 
 // Facebook authentication
 config.useFacebookAuth = false;
-// Auth token
-config.account.token = "";
+config.account.token = ""; // Auth token which is only valid for 2 hours - better use cookies
 
 // You can also generate your own token through Facebook Data. (This will get overwritten if you use account.token)
-// Cookie from "c_user" at http://facebook.com
-config.account.c_user = "";
-// Cookie from "datr" at http://facebook.com
-config.account.datr = "";
-// Cookie from "xs" at http://facebook.com
-config.account.xs = "";
+config.account.c_user = ""; // Cookie from "c_user" at http://facebook.com
+config.account.datr = "";// Cookie from "datr" at http://facebook.com
+config.account.xs = ""; // Cookie from "xs" at http://facebook.com
 
 // IGNORE THIS
 module.exports = config;

@@ -5,7 +5,7 @@ var names = require('./names');
 
 var AgarioClient = require('agario-client'); //Use this in your scripts
 
-function FeederBot(bot_id, agent, bot_number, server, auth_token) {
+function FeederBot(bot_id, agent, bot_number, server) {
     this.bot_id = bot_id; //ID of bot for logging
 
     if (config.useRandomSkinName) {
@@ -363,6 +363,8 @@ var url = require('url');
 
 var auth_token = null;
 
+
+
 if (config.useFacebookAuth) {
     var account = new AgarioClient.Account();
 
@@ -380,41 +382,49 @@ if (config.account.token != "") {
     auth_token = config.account.token;
 }
 
+function startFeederBotOnProxies() {
+    console.log("Starting agario-feeder-bot with auth_token:")
+    console.log(auth_token);
 
-
-for (proxy_line in lines) {
-    if (lines[proxy_line][0] == "#" || lines[proxy_line].length < 3) {
-        continue;
-    }
-    if (process.argv[3] != null && proxy_line != process.argv[3]) {
-        continue;
-    } //usefull for testing single proxies
-
-    proxy = "http://" + lines[proxy_line];
-    console.log(proxy);
-
-    try {
-
-        var opts = url.parse(proxy);
-
-        if (proxy != null) {
-            agent = HttpsProxyAgent(opts);
-        } else {
-            var agent = null;
+    for (proxy_line in lines) {
+        if (lines[proxy_line][0] == "#" || lines[proxy_line].length < 3) {
+            continue;
         }
+        if (process.argv[3] != null && proxy_line != process.argv[3]) {
+            continue;
+        } //usefull for testing single proxies
 
-        if (lines[proxy_line] == "NOPROXY") {
-            agent = null;
+        proxy = "http://" + lines[proxy_line];
+        console.log(proxy);
+
+        try {
+
+            var opts = url.parse(proxy);
+
+            if (proxy != null) {
+                agent = HttpsProxyAgent(opts);
+            } else {
+                var agent = null;
+            }
+
+            if (lines[proxy_line] == "NOPROXY") {
+                agent = null;
+            }
+
+
+            console.log("forcing connection to ws://" + config.gameServerIp);
+            for (var bot_id in bots_names) {
+                bot_count++;
+                bots[bot_count] = new FeederBot(bot_count, agent, bot_count, 'ws://' + config.gameServerIp);
+            }
+
+        } catch (e) {
+            console.log('error on startup: ' + e);
         }
-
-
-        console.log("forcing connection to ws://" + config.gameServerIp);
-        for (var bot_id in bots_names) {
-            bot_count++;
-            bots[bot_count] = new FeederBot(bot_count, agent, bot_count, 'ws://' + config.gameServerIp, auth_token);
-        }
-
-    } catch (e) {
-        console.log('error on startup: ' + e);
     }
 }
+
+
+setTimeout(function() {
+    startFeederBotOnProxies();
+}, 1000);
