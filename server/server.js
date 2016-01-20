@@ -9,17 +9,17 @@ console.log("Starting server on port 8081");
 io.on('connection', function (socket) {
 
   socket.on('login', function (data) {
-  	console.log(data);
-	socket.join(data.user);
+    console.log(data);
+    socket.join(data.user);
   });
 
   socket.on('pos', function (data) {
-	console.log(data);
-	io.emit('pos', data);
+    console.log(data);
+    io.emit('pos', data);
   });
 
   socket.on('cmd', function (data) {
-	console.log(data);
+    console.log(data);
     io.emit('cmd', data);
   });
 
