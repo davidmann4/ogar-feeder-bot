@@ -158,7 +158,7 @@ FeederBot.prototype = {
     },
 
     canSplitFeedPlayer: function(botMass, otherMass) {
-        requiredMass = othermass * 1.25;
+        requiredMass = otherMass * 1.25;
         return requiredMass < botMass
     },
 
