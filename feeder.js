@@ -158,7 +158,7 @@ FeederBot.prototype = {
     },
 
     canSplitFeedPlayer: function(botMass, otherMass) {
-        requiredMass = otherMass * 1.25;
+        requiredMass = otherMass * 0.8;
         return requiredMass < botMass
     },
 
@@ -180,7 +180,7 @@ FeederBot.prototype = {
             bot.client.moveTo(valid_player_pos["x"], valid_player_pos["y"]);
 
             if (bot.playerInRange(my_ball, valid_player_pos["x"], valid_player_pos["y"], valid_player_pos.size, 400)) {
-                if (bot.canSplitFeedPlayer(my_ball.mass, valid_player_pos.size)) {
+                if (bot.canSplitFeedPlayer(my_ball.mass, valid_player_pos.size) && my_ball.size < valid_player_pos.size) {
                     bot.client.split();
                 }
             }
@@ -190,10 +190,7 @@ FeederBot.prototype = {
 
         for (var ball_id in bot.client.balls) {
             var ball = bot.client.balls[ball_id];
-            if (ball.virus) {
-                //console.log("player spotted");            
-                continue;
-            }
+            if (ball.virus) continue;
             if (!ball.visible) continue;
             if (ball.mine) continue;
             if (ball.size / my_ball.size > 0.5) continue;
