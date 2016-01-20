@@ -16,12 +16,6 @@ This project is a server sided script that runs multiple bots on one connection 
 1. Open up the config.js, edit the *config.gameServerIp* to your Ogar Server IP.
 2. That's it, now through the terminal or CMD launch the script using: node feeder.js
 
-### How to connect to Agar.io
-1. Visit Agar.io, generate a new Party.
-2. Open the JavaScript console (Using F12 or through the menu) and find: Connecting to ws://xxx.xxx.xxx.xx:xxxx
-3. Copy the IP address, open up config.js and paste in that IP into *config.gameServerIp*.
-4. That's it, now through the terminal or CMD launch the script using: node feeder.js
-
 ## To-do list
 - [x] Allow Facebook login for the bots
 - [ ] Rebuild the main server and the client without using Agar-Mini-Map
