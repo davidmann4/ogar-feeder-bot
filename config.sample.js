@@ -15,6 +15,9 @@ config.mapserver = "ws://127.0.0.1:34343";
 // Location of your proxy files with HTTP proxies (Sock proxies not supported yet!)
 config.proxies = "proxy.txt";
 
+// Maximum number of bots to load
+config.maxBots = "128";
+
 // Set to true to use random name
 config.useRandomSkinName = true;
 // If above is false, us this skin name

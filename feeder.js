@@ -387,6 +387,7 @@ function startFeederBotOnProxies() {
     console.log(auth_token);
 
     for (proxy_line in lines) {
+		
         if (lines[proxy_line][0] == "#" || lines[proxy_line].length < 3) {
             continue;
         }
@@ -414,8 +415,10 @@ function startFeederBotOnProxies() {
 
             console.log("forcing connection to ws://" + config.gameServerIp);
             for (var bot_id in bots_names) {
-                bot_count++;
-                bots[bot_count] = new FeederBot(bot_count, agent, bot_count, 'ws://' + config.gameServerIp);
+				if (bot_count !== config.maxBots) {
+					bot_count++;
+					bots[bot_count] = new FeederBot(bot_count, agent, bot_count, 'ws://' + config.gameServerIp);
+				}
             }
 
         } catch (e) {
