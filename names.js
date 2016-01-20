@@ -95,7 +95,8 @@ names.nameList = [
     "argentina",
     "scotland",
     "sir",
-    "romania"
+    "romania",
+    "israel"
 ];
 
 names.getRandomName = function () {
