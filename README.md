@@ -35,4 +35,4 @@ This project is a server sided script that runs multiple bots on one connection 
 Join the Skype group to message other people and to talk to other developers for resolving issues! Join by clicking: https://join.skype.com/eQuN52iQVzZg
 
 ## Disclaimer and license
-This project is under the The MIT License (MIT). This means you may take the code and change it or share it as much as you want. Do note that botting is against the Terms of Service of Agar.io. - this script is intended to be used on your private Ogar server.
+This project is under the The MIT License (MIT). This means you may take the code and change it or share it as much as you want. Do note that botting is against the Terms of Service of Agar.io - this script is intended to be used on your private Ogar server.
