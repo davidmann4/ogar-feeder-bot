@@ -3,8 +3,8 @@ var config = {};
 config.account = {};
 // END OF IGNORE
 
-// To remove lot's of output
-config.verbose = true; 
+// 0 = Shows small amount of logs | 1 = Shows default logs | 2 = Shows most logs
+config.verbosityLevel = 1;
 
 // Useragent the bot will use
 config.userAgent = 'agario-feeder-bot';
@@ -18,10 +18,8 @@ config.proxies = "proxy.txt";
 // Maximum number of bots to load
 config.maxBots = "128";
 
-// Set to true to use random name
-config.useRandomSkinName = true;
-// If above is false, us this skin name
-config.useStaticName = "austria";
+config.useRandomSkinName = true; // Set to true to use random name
+config.useStaticName = "AgarioFeederBot"; // If above is false, us this skin name
 
 // Set this to the server IP (Agar or Ogar server IP).
 config.gameServerIp = "127.0.0.1:443"
@@ -29,8 +27,7 @@ config.gameServerIp = "127.0.0.1:443"
 // Edit this value so bots collect mass before coming towards the player
 config.minimumMassBeforeFeed = 0;
 
-// Facebook authentication
-config.useFacebookAuth = false;
+config.useFacebookAuth = false; // Set to true for Facebook authentication
 config.account.token = ""; // Auth token which is only valid for 2 hours - better use cookies
 
 // You can also generate your own token through Facebook Data. (This will get overwritten if you use account.token)

@@ -14,30 +14,22 @@ function FeederBot(bot_id, agent, bot_number, server) {
         this.nickname = config.useStaticName;
     }
 
-
-    this.verbose = config.verbose;
     this.interval_id = 0; //here we will store setInterval's ID
-
     this.ball_id = null;
-
     this.server = ''; //server address will be stored here
-
-    this.client = new AgarioClient('Bot ' + this.bot_id); //create new client
+    this.client = new AgarioClient('Bot_' + this.bot_id); //creates new client
     this.client.debug = 0;
     this.client.agent = agent;
     this.client.auth_token = auth_token;
     this.client.headers['user-agent'] = config.userAgent;
-
     this.isOnFeedMission = false;
-
     this.onboard_client(server, bot_number)
-
 }
 
 FeederBot.prototype = {
     log: function(text) {
-        if (this.verbose) {
-            console.log(this.bot_id + ' says: ' + text);
+        if (config.verbosityLevel > 0) {
+            console.log('Bot_' + this.bot_id + ': ' + text);
         }
     },
 
@@ -49,7 +41,9 @@ FeederBot.prototype = {
     },
 
     connect: function(server) {
-        this.log('Connecting to ' + server);
+        if (config.verbosityLevel > 0) {
+            this.log('Connecting to: ' + server);
+        }
         this.server = server;
         this.client.connect(server);
         this.attachEvents();
@@ -59,7 +53,9 @@ FeederBot.prototype = {
         var bot = this;
 
         bot.client.on('connected', function() {
-            bot.log('Connected, spawning');
+            if (config.verbosityLevel > 0) {
+                bot.log('Connection Success, spawning');
+            }
             bot.client.spawn(bot.nickname);
             //we will search for target to eat every 100ms
             bot.interval_id = setInterval(function() {
@@ -68,21 +64,26 @@ FeederBot.prototype = {
         });
 
         bot.client.on('connectionError', function(e) {
-            bot.log('Connection failed with reason: ' + e);
-            bot.log('Server address set to: ' + bot.server);
+            if (config.verbosityLevel > 0) {
+                bot.log('Connection Failed: ' + e);
+            }
         });
 
 
         bot.client.on('myNewBall', function(ball_id) {
-            bot.log('My new ball ' + ball_id);
+            // Should always be generated.
+            if (config.verbosityLevel > -1) {
+                bot.log('New Cell Generated (' + ball_id + ')');
+            }
         });
 
         bot.client.once('leaderBoardUpdate', function(old, leaders) {
             var name_array = leaders.map(function(ball_id) {
                 return bot.client.balls[ball_id].name || 'unnamed'
             });
-
-            bot.log('Leaders on server: ' + name_array.join(', '));
+            if (config.verbosityLevel > 0) {
+                bot.log('Server Leaderboard: ' + name_array.join(' - '));
+            }
         });
 
         bot.client.on('somebodyAteSomething', function(eater_ball, eaten_ball) {
@@ -94,24 +95,34 @@ FeederBot.prototype = {
 
         bot.client.on('mineBallDestroy', function(ball_id, reason) { //when my ball destroyed
             if (reason.by) {
-                bot.log(bot.client.balls[reason.by] + ' ate my ball');
+                if (config.verbosityLevel > 0) {
+                    bot.log(bot.client.balls[reason.by] + ' has killed a cell.');
+                }
             }
 
             if (reason.reason == 'merge') {
-                //bot.log('My ball ' + ball_id + ' merged with my other ball, now i have ' + bot.client.my_balls.length + ' balls');
+                if (config.verbosityLevel > 1) {
+                    bot.log('Merged with another cell. Bot_' + ball_id + ' now has ' + bot.client.my_balls.length + ' balls.')
+                }
             } else {
-                //bot.log('I lost my ball ' + ball_id + ', ' + bot.client.my_balls.length + ' balls left');
+                if (config.verbosityLevel > 1) {
+                    bot.log('Lost a cell! Bot_' + ball_id + ' has ' + bot.client.my_balls.length + ' cells left.');
+                }
             }
         });
 
         bot.client.on('lostMyBalls', function() {
-            bot.log('Lost all my balls, respawning');
+            if (config.verbosityLevel > 0) {
+                bot.log('Has been killed, respawning.');
+            }
             bot.client.spawn(bot.nickname);
             bot.isOnFeedMission = false;
         });
 
         bot.client.on('disconnect', function() {
-            bot.log('Disconnected from server, bye!');
+            if (config.verbosityLevel > 0) {
+                bot.log('Disconnected from the server.');
+            }
         });
 
         bot.client.on('reset', function() { //when client clears everything (connection lost?)
@@ -191,7 +202,9 @@ FeederBot.prototype = {
         for (var ball_id in bot.client.balls) {
             var ball = bot.client.balls[ball_id];
             if (ball.virus) {
-                //console.log("player spotted");            
+                if (config.verbosityLevel > 1) {
+                    bot.log('Cell has been spotted.');
+                }
                 continue;
             }
             if (!ball.visible) continue;
@@ -242,7 +255,6 @@ FeederBot.prototype = {
 
 //launching bots below
 
-
 var contains = function(needle) {
     // Per spec, the way to identify NaN is that it is not equal to itself
     var findNaN = needle !== needle;
@@ -263,7 +275,6 @@ var contains = function(needle) {
                     break;
                 }
             }
-
             return index;
         };
     }
@@ -271,7 +282,6 @@ var contains = function(needle) {
     return indexOf.call(this, needle) > -1;
 };
 
-//trololol
 var WebSocket = require('ws');
 var msgpack = require('msgpack');
 var sleep = require('sleep');
@@ -289,7 +299,8 @@ function miniMapConnectToServer() {
     ws.binaryType = "arraybuffer";
 
     ws.onopen = function() {
-        console.log(address + ' connected');
+
+        console.log('Connection to ' + address + ' is successful!');
     }
 
     ws.onmessage = function(event) {
@@ -306,7 +317,6 @@ function miniMapConnectToServer() {
                         valid_player_pos = cell;
                         return;
                     }
-
                 }
                 break;
             case 129:
@@ -316,17 +326,16 @@ function miniMapConnectToServer() {
                     valid_player_ids = players[0]["ids"];
                 }
                 break;
-
         }
     }
 
     ws.onerror = function() {
-        console.error('failed to connect to map server');
+        console.error('Connection to Map Server failed.');
     }
 
     ws.onclose = function() {
         map_server = null;
-        console.log('map server disconnected');
+        console.log('Map server connection lost!');
     }
 
     map_server = ws;
@@ -383,11 +392,9 @@ if (config.account.token != "") {
 }
 
 function startFeederBotOnProxies() {
-    console.log("Starting agario-feeder-bot with auth_token:")
-    console.log(auth_token);
-
+    console.log("Auth_Token: " + auth_token);
     for (proxy_line in lines) {
-		
+        
         if (lines[proxy_line][0] == "#" || lines[proxy_line].length < 3) {
             continue;
         }
@@ -413,20 +420,19 @@ function startFeederBotOnProxies() {
             }
 
 
-            console.log("forcing connection to ws://" + config.gameServerIp);
+            console.log("Attempting connection to ws://" + config.gameServerIp);
             for (var bot_id in bots_names) {
-				if (bot_count !== config.maxBots) {
-					bot_count++;
-					bots[bot_count] = new FeederBot(bot_count, agent, bot_count, 'ws://' + config.gameServerIp);
-				}
+                if (bot_count !== config.maxBots) {
+                    bot_count++;
+                    bots[bot_count] = new FeederBot(bot_count, agent, bot_count, 'ws://' + config.gameServerIp);
+                }
             }
 
         } catch (e) {
-            console.log('error on startup: ' + e);
+            console.log('Error occured on startup: ' + e);
         }
     }
 }
-
 
 setTimeout(function() {
     startFeederBotOnProxies();
