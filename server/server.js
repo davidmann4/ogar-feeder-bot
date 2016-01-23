@@ -15,12 +15,12 @@ io.on('connection', function (socket) {
 
   socket.on('pos', function (data) {
     console.log(data);
-    io.emit('pos', data);
+    io.sockets.in(socket.room).emit('pos', data);
   });
 
   socket.on('cmd', function (data) {
     console.log(data);
-    io.emit('cmd', data);
+    io.sockets.in(socket.room).emit('cmd', data);
   });
 
 });
