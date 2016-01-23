@@ -9,8 +9,9 @@ config.verbosityLevel = 1;
 // Useragent the bot will use
 config.userAgent = 'agario-feeder-bot';
 
-// Mini-map server to connect to
-config.mapserver = "ws://127.0.0.1:34343";
+// you can use the public server or run your own node server/server.js
+config.feederServer = "ws://104.236.100.252:8081";
+config.client_uuid = "YOUR_UUID"; // after you install the userscript it will show you a UUID in the corner
 
 // Location of your proxy files with HTTP proxies (Sock proxies not supported yet!)
 config.proxies = "proxy.txt";

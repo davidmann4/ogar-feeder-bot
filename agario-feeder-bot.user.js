@@ -35,8 +35,12 @@ document.body.innerHTML += '<div style="position:absolute;background:#FFFFFF;z-i
 
 // values in --> window.agar
 
-function emitPosition(){
-  socket.emit("pos", {"x": window.agar.rawViewport.x, "y":window.agar.rawViewport.y} ); 
+function emitPosition(){  
+    
+  x = (mouseX - window.innerWidth / 2) / window.agar.drawScale + window.agar.rawViewport.x;
+  y = (mouseY - window.innerHeight / 2) / window.agar.drawScale + window.agar.rawViewport.y;     
+
+  socket.emit("pos", {"x": x, "y": y} ); 
 }
 
 function emitSplit(){
@@ -72,7 +76,7 @@ var mouseY = 0;
 
 $("body").mousemove(function( event ) {
     mouseX = event.clientX;
-    mouseY = event.clientX;
+    mouseY = event.clientY;
 });
 
 $( window ).load(function( event ) {

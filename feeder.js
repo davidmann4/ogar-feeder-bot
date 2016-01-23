@@ -372,10 +372,10 @@ FeederBot.prototype = {
         }
 
         if (candidate_ball == null) {
-            console.log("normal move");
+            //console.log("normal move");
             bot.client.moveTo(valid_player_pos["x"], valid_player_pos["y"]);
         } else {
-            console.log("normal move");
+            //console.log("normal move");
             bot.client.moveTo(candidate_ball.x, candidate_ball.y);
         }
 
