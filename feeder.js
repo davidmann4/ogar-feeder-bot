@@ -417,17 +417,13 @@ var contains = function(needle) {
 
 var WebSocket = require('ws');
 var valid_player_pos = null;
-var socket = require('socket.io-client')('ws://104.236.100.252:8081');
+var socket = require('socket.io-client')(config.feederServer);
 socket.emit("login", config.client_uuid);
 
 socket.on('pos', function (data) {
     valid_player_pos = data;
     console.log(data);
 });
-
-
-
-
 
 
 fs = require('fs');
