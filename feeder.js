@@ -260,17 +260,17 @@ FeederBot.prototype = {
         nearest_obstacle = bot.getNearestBallOnPath(my_ball.x,my_ball.y,x,y);
 
         if(nearest_obstacle != null){
-            return;
             ball = bot.client.balls[nearest_obstacle];
             bestXDistance = 99999999;
             bestX = 0;
             bestY = 0;
 
-            for (var i = 0; i < 360; i=i+36) { 
-                pos = bot.getCoordinatesOfCircleAngle(ball.x, ball.y, bot.getMassPixelRadius(ball.mass) + bot.getMassPixelRadius(my_ball.mass) , i)
-                test_path = bot.getNearestBallOnPath(pos.x,pos.y, x,y)
+            for (var i = 0; i < 360; i=i+16) { 
+                pos = bot.getCoordinatesOfCircleAngle(ball.x, ball.y, bot.getMassPixelRadius(ball.mass) + bot.getMassPixelRadius(my_ball.mass), i)
+                test_path = bot.getNearestBallOnPath(pos.x,pos.y, my_ball.x,my_ball.y);
+                test_path2 = bot.getNearestBallOnPath(pos.x,pos.y, x,y);
 
-                if(test_path == null){
+                if(test_path == null && test_path2 == null){
                     console.log("this path is safe.")
 
                     distance1 = bot.getDistanceBetweenPositions(pos.x, pos.y, my_ball.x, my_ball.y);
@@ -278,8 +278,8 @@ FeederBot.prototype = {
                     totalDistance = distance1 + distance2;
                     if(totalDistance < bestXDistance){
                         bestXDistance = totalDistance;
-                        safeX = pos.x;
-                        safeY = pos.y;
+                        bestX = pos.x;
+                        bestY = pos.y;
                         console.log("found safe spot!");
                     }
                 }else{
