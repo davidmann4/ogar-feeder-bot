@@ -135,7 +135,11 @@ FeederBot.prototype = {
     },
 
     getDistanceBetweenBallAndPosition: function(ball_1, x, y) {
-        return Math.sqrt(Math.pow(ball_1.x - x, 2) + Math.pow(y - ball_1.y, 2));
+        return this.getDistanceBetweenPositions(ball_1.x,ball_1.y, x, y);
+    },
+
+    getDistanceBetweenPositions: function(x1, y1, x2, y2) {
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y1 - y2, 2));
     },
 
     getAvailableTransporter: function() {
@@ -180,6 +184,112 @@ FeederBot.prototype = {
         return bot_distance < ditance_needed;
     },
 
+    in_circle: function(center_x, center_y, radius, x, y){
+        //square_dist = (center_x - x) ^ 2 + (center_y - y) ^ 2;
+        //return square_dist <= (radius/2) ^ 2;
+        dx = x-center_x
+        dy = y-center_y
+        return dx*dx+dy*dy <= radius*radius
+    },
+
+    getCoordinatesOfCircleAngle: function(center_x, center_y, radius, angle){
+        x = center_x + radius * Math.cos(angle);
+        y = center_y + radius * Math.sin(angle);
+        return {x,y};
+    },
+
+    getNearestBallOnPath:function(from_x,from_y, dest_x,dest_y){
+        bot = this;
+        my_ball = bot.client.balls[bot.client.my_balls[0]];
+
+        x0 = from_x;
+        y0 = from_y;
+        x1 = dest_x;
+        y1 = dest_y;
+
+        dx = Math.abs(x1-x0);
+        dy = Math.abs(y1-y0);
+        sx = (x0 < x1) ? 1 : -1;
+        sy = (y0 < y1) ? 1 : -1;
+        err = dx-dy;
+
+        return_id = null;
+
+        steps = 0; 
+
+        while(true){
+            steps++;
+            if (steps > 1000){break;}
+
+            for (ball_id in bot.client.balls) {
+                ball = bot.client.balls[ball_id];
+                if (!ball.virus) {continue;}
+
+                if(bot.in_circle(ball.x, ball.y, bot.getMassPixelRadius(ball.mass), x0, y0)){
+                    console.log("Path not safe: bot would die!");
+                    return_id = ball_id;
+                    break;                    
+                }
+            }
+
+            if (return_id != null) break;
+            if ((x0==x1) && (y0==y1)) break;
+            e2 = 2*err;
+            if (e2 >-dy){ err -= dy; x0  += sx; }
+            if (e2 < dx){ err += dx; y0  += sy; }
+        }
+
+        return return_id;
+    },
+
+    safeMoveTo: function(x, y){
+        bot = this;
+        my_ball = bot.client.balls[bot.client.my_balls[0]];
+
+        console.log("safemoveto.")
+
+        safeX = x;
+        safeY = y;
+
+        nearest_obstacle = bot.getNearestBallOnPath(my_ball.x,my_ball.y,x,y);
+
+        if(nearest_obstacle != null){
+            ball = bot.client.balls[nearest_obstacle];
+                bestXDistance = 99999999;
+
+                for (var i = 0; i < 360; i++) { 
+                    pos = bot.getCoordinatesOfCircleAngle(ball.x, ball.y, bot.getMassPixelRadius(ball.mass) + bot.getMassPixelRadius(my_ball.mass) + 150 , i)
+                    console.log(i)
+
+                    test_path = bot.getNearestBallOnPath(pos.x,pos.y, x,y)
+
+                    if(test_path == null){
+                        console.log("this path is safe.")
+
+                        distance1 = bot.getDistanceBetweenPositions(pos.x, pos.y, my_ball.x, my_ball.y);
+                        distance2 = bot.getDistanceBetweenPositions(pos.x, pos.y, x, y);
+                        totalDistance = distance1 + distance2;
+                        if(totalDistance < bestXDistance){
+                            bestXDistance = totalDistance;
+                            safeX = pos.x;
+                            safeY = pos.y;
+                            console.log("found safe spot!");
+                        }
+                    }else{
+                        console.log("pathfinding: this path is not safe.")
+                    }
+                }
+
+                console.log("pathfinding done:")
+                console.log(safeX)
+                console.log(safeY)           
+        }
+
+
+
+        bot.client.moveTo(safeX, safeY);
+    },
+
     recalculateTarget: function() {
         var bot = this;
         var candidate_ball = null;
@@ -188,7 +298,13 @@ FeederBot.prototype = {
         if (!my_ball) return;
 
         if (valid_player_pos != null && bot.isOnFeedMission == true) {
-            bot.client.moveTo(valid_player_pos["x"], valid_player_pos["y"]);
+
+            if(config.enableSaveMoveTo){
+                bot.safeMoveTo(valid_player_pos["x"], valid_player_pos["y"]);
+            }else{
+                bot.moveTo(valid_player_pos["x"], valid_player_pos["y"]);
+            }
+            
 
             if (bot.playerInRange(my_ball, valid_player_pos["x"], valid_player_pos["y"], valid_player_pos.size, 400)) {
                 if (bot.canSplitFeedPlayer(my_ball.mass, valid_player_pos.size)) {
@@ -224,7 +340,7 @@ FeederBot.prototype = {
             got_tranporter = true;
         }
 
-        if (valid_player_pos != null && my_ball.mass > config.minimumMassBeforeFeed) {
+        if (valid_player_pos != null && my_ball.mass > config.minimumMassBeforeFeed) {            
             bot.isOnFeedMission = true;
             return;
         }

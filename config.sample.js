@@ -28,6 +28,8 @@ config.gameServerIp = "127.0.0.1:443"
 
 // Edit this value so bots collect mass before coming towards the player
 config.minimumMassBeforeFeed = 0;
+config.enableSaveMoveTo = false;
+
 
 config.useFacebookAuth = false; // Set to true for Facebook authentication
 config.account.token = ""; // Auth token which is only valid for 2 hours - better use cookies
