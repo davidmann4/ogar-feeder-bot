@@ -202,41 +202,40 @@ FeederBot.prototype = {
         bot = this;
         ball = bot.client.balls[ball_id];
 
-        x0 = from_x;
-        y0 = from_y;
-        x1 = dest_x;
-        y1 = dest_y;
+        // Translate coordinates
+        var x1 = Math.ceil(from_x);
+        var y1 = Math.ceil(from_y);
+        var x2 = Math.ceil(dest_x);
+        var y2 = Math.ceil(dest_y);
+        // Define differences and error check
+        var dx = Math.abs(x2 - x1);
+        var dy = Math.abs(y2 - y1);
+        var sx = (x1 < x2) ? 1 : -1;
+        var sy = (y1 < y2) ? 1 : -1;
+        var err = dx - dy;
+        // Main loop
+        while (!((x1 == x2) && (y1 == y2))) {            
+          var e2 = err << 1;
+          if (e2 > -dy) {
+            err -= dy;
+            x1 += sx;
+          }
+          if (e2 < dx) {
+            err += dx;
+            y1 += sy;
+          }
 
-        dx = Math.abs(x1-x0);
-        dy = Math.abs(y1-y0);
-        sx = (x0 < x1) ? 1 : -1;
-        sy = (y0 < y1) ? 1 : -1;
-        err = dx-dy;
-
-        steps = 0;
-
-        while(true){
-            steps++;
-            if (steps > 1000){break;}
-
-            if(bot.in_circle(ball.x, ball.y, bot.getMassPixelRadius(ball.mass), x0, y0)){
-                return true;
-            }
-
-            if (return_id != null) break;
-            if ((x0==x1) && (y0==y1)) break;
-            e2 = 2*err;
-            if (e2 >-dy){ err -= dy; x0  += sx; }
-            if (e2 < dx){ err += dx; y0  += sy; }
+          if(bot.in_circle(ball.x, ball.y, bot.getMassPixelRadius(ball.mass), x1, y1)){
+            return true;
+          }
         }
-
+        // Return the result
         return false;
     },
 
     getNearestBallOnPath:function(from_x,from_y, dest_x,dest_y){
         bot = this;
         my_ball = bot.client.balls[bot.client.my_balls[0]];
-        return_id = null;
 
         for (ball_id in bot.client.balls) {
             ball = bot.client.balls[ball_id];
@@ -244,12 +243,11 @@ FeederBot.prototype = {
 
             if(bot.checkIfPathCrossesBall(from_x,from_y, dest_x,dest_y, ball_id)){
                 console.log("Path not safe: bot would die!");
-                return_id = ball_id;
-                break;                    
+                return ball_id;                 
             }
         }        
 
-        return return_id;
+        return null;
     },
 
     safeMoveTo: function(x, y){
@@ -262,13 +260,14 @@ FeederBot.prototype = {
         nearest_obstacle = bot.getNearestBallOnPath(my_ball.x,my_ball.y,x,y);
 
         if(nearest_obstacle != null){
+            return;
             ball = bot.client.balls[nearest_obstacle];
             bestXDistance = 99999999;
             bestX = 0;
             bestY = 0;
 
             for (var i = 0; i < 360; i=i+36) { 
-                pos = bot.getCoordinatesOfCircleAngle(ball.x, ball.y, bot.getMassPixelRadius(ball.mass) + bot.getMassPixelRadius(my_ball.mass) + 250 , i)
+                pos = bot.getCoordinatesOfCircleAngle(ball.x, ball.y, bot.getMassPixelRadius(ball.mass) + bot.getMassPixelRadius(my_ball.mass) , i)
                 test_path = bot.getNearestBallOnPath(pos.x,pos.y, x,y)
 
                 if(test_path == null){
