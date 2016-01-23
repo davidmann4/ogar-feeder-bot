@@ -10,7 +10,7 @@ io.on('connection', function (socket) {
 
   socket.on('login', function (data) {
     console.log("User connected with id:" + data);
-    socket.join(data.user);
+    socket.join(data);
   });
 
   socket.on('pos', function (data) {
