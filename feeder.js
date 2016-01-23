@@ -193,14 +193,14 @@ FeederBot.prototype = {
     },
 
     getCoordinatesOfCircleAngle: function(center_x, center_y, radius, angle){
-        x = center_x + radius * Math.cos(angle);
-        y = center_y + radius * Math.sin(angle);
+        x = Math.ceil(center_x + radius * Math.cos(angle));
+        y = Math.ceil(center_y + radius * Math.sin(angle));
         return {x,y};
     },
 
-    getNearestBallOnPath:function(from_x,from_y, dest_x,dest_y){
+    checkIfPathCrossesBall:function(from_x,from_y, dest_x,dest_y,ball_id){
         bot = this;
-        my_ball = bot.client.balls[bot.client.my_balls[0]];
+        ball = bot.client.balls[ball_id];
 
         x0 = from_x;
         y0 = from_y;
@@ -213,23 +213,14 @@ FeederBot.prototype = {
         sy = (y0 < y1) ? 1 : -1;
         err = dx-dy;
 
-        return_id = null;
-
-        steps = 0; 
+        steps = 0;
 
         while(true){
             steps++;
             if (steps > 1000){break;}
 
-            for (ball_id in bot.client.balls) {
-                ball = bot.client.balls[ball_id];
-                if (!ball.virus) {continue;}
-
-                if(bot.in_circle(ball.x, ball.y, bot.getMassPixelRadius(ball.mass), x0, y0)){
-                    console.log("Path not safe: bot would die!");
-                    return_id = ball_id;
-                    break;                    
-                }
+            if(bot.in_circle(ball.x, ball.y, bot.getMassPixelRadius(ball.mass), x0, y0)){
+                return true;
             }
 
             if (return_id != null) break;
@@ -239,14 +230,31 @@ FeederBot.prototype = {
             if (e2 < dx){ err += dx; y0  += sy; }
         }
 
+        return false;
+    },
+
+    getNearestBallOnPath:function(from_x,from_y, dest_x,dest_y){
+        bot = this;
+        my_ball = bot.client.balls[bot.client.my_balls[0]];
+        return_id = null;
+
+        for (ball_id in bot.client.balls) {
+            ball = bot.client.balls[ball_id];
+            if (!ball.virus) {continue;}            
+
+            if(bot.checkIfPathCrossesBall(from_x,from_y, dest_x,dest_y, ball_id)){
+                console.log("Path not safe: bot would die!");
+                return_id = ball_id;
+                break;                    
+            }
+        }        
+
         return return_id;
     },
 
     safeMoveTo: function(x, y){
         bot = this;
         my_ball = bot.client.balls[bot.client.my_balls[0]];
-
-        console.log("safemoveto.")
 
         safeX = x;
         safeY = y;
@@ -255,34 +263,42 @@ FeederBot.prototype = {
 
         if(nearest_obstacle != null){
             ball = bot.client.balls[nearest_obstacle];
-                bestXDistance = 99999999;
+            bestXDistance = 99999999;
+            bestX = 0;
+            bestY = 0;
 
-                for (var i = 0; i < 360; i++) { 
-                    pos = bot.getCoordinatesOfCircleAngle(ball.x, ball.y, bot.getMassPixelRadius(ball.mass) + bot.getMassPixelRadius(my_ball.mass) + 150 , i)
-                    console.log(i)
+            for (var i = 0; i < 360; i=i+36) { 
+                pos = bot.getCoordinatesOfCircleAngle(ball.x, ball.y, bot.getMassPixelRadius(ball.mass) + bot.getMassPixelRadius(my_ball.mass) + 250 , i)
+                test_path = bot.getNearestBallOnPath(pos.x,pos.y, x,y)
 
-                    test_path = bot.getNearestBallOnPath(pos.x,pos.y, x,y)
+                if(test_path == null){
+                    console.log("this path is safe.")
 
-                    if(test_path == null){
-                        console.log("this path is safe.")
-
-                        distance1 = bot.getDistanceBetweenPositions(pos.x, pos.y, my_ball.x, my_ball.y);
-                        distance2 = bot.getDistanceBetweenPositions(pos.x, pos.y, x, y);
-                        totalDistance = distance1 + distance2;
-                        if(totalDistance < bestXDistance){
-                            bestXDistance = totalDistance;
-                            safeX = pos.x;
-                            safeY = pos.y;
-                            console.log("found safe spot!");
-                        }
-                    }else{
-                        console.log("pathfinding: this path is not safe.")
+                    distance1 = bot.getDistanceBetweenPositions(pos.x, pos.y, my_ball.x, my_ball.y);
+                    distance2 = bot.getDistanceBetweenPositions(pos.x, pos.y, x, y);
+                    totalDistance = distance1 + distance2;
+                    if(totalDistance < bestXDistance){
+                        bestXDistance = totalDistance;
+                        safeX = pos.x;
+                        safeY = pos.y;
+                        console.log("found safe spot!");
                     }
+                }else{
+                    console.log("pathfinding: this path is not safe.")
                 }
+            }
 
-                console.log("pathfinding done:")
-                console.log(safeX)
-                console.log(safeY)           
+            if( bestX == 0 && bestY == 0){
+                console.log("pathfinding: impossible.")
+                return;
+            }else{
+                safeX = bestX;
+                safeY = bestY;
+            }
+
+            console.log("pathfinding done:")
+            console.log(safeX)
+            console.log(safeY)           
         }
 
 
@@ -319,7 +335,7 @@ FeederBot.prototype = {
             var ball = bot.client.balls[ball_id];
             if (ball.virus) {
                 if (config.verbosityLevel > 1) {
-                    bot.log('Cell has been spotted.');
+                    bot.log('virus ( green ball ) has been spotted.');
                 }
                 continue;
             }
@@ -357,8 +373,10 @@ FeederBot.prototype = {
         }
 
         if (candidate_ball == null) {
+            console.log("normal move");
             bot.client.moveTo(valid_player_pos["x"], valid_player_pos["y"]);
         } else {
+            console.log("normal move");
             bot.client.moveTo(candidate_ball.x, candidate_ball.y);
         }
 
