@@ -195,7 +195,7 @@ FeederBot.prototype = {
     getCoordinatesOfCircleAngle: function(center_x, center_y, radius, angle){
         x = Math.ceil(center_x + radius * Math.cos(angle));
         y = Math.ceil(center_y + radius * Math.sin(angle));
-        return {x,y};
+        return x,y;
     },
 
     checkIfPathCrossesBall:function(from_x,from_y, dest_x,dest_y,ball_id){
