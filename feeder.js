@@ -37,7 +37,7 @@ FeederBot.prototype = {
         var bot = this;
         setTimeout(function() {
             bot.connect(server);
-        }, 1000 * bot_number);
+        }, config.onboardingTimer * bot_number);
     },
 
     connect: function(server) {
@@ -360,19 +360,15 @@ function getRandomLine(filename) {
 //object of bots
 var bots = {
     "1": null,
-    "2": null,
 };
 
 bot_count = 0;
-var bots_names = ['spy', 'obama', 'merkel', 'poland', 'austria'];
 
 var fs = require('fs');
 var lines = fs.readFileSync(config.proxies).toString().split("\n");
 var url = require('url');
 
 var auth_token = null;
-
-
 
 if (config.useFacebookAuth) {
     var account = new AgarioClient.Account();
@@ -421,7 +417,7 @@ function startFeederBotOnProxies() {
 
 
             console.log("Attempting connection to ws://" + config.gameServerIp);
-            for (var bot_id in bots_names) {
+            for (i = 0; i < config.botsPerIp; i++) { 
                 if (bot_count !== config.maxBots) {
                     bot_count++;
                     bots[bot_count] = new FeederBot(bot_count, agent, bot_count, 'ws://' + config.gameServerIp);

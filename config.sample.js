@@ -14,6 +14,8 @@ config.mapserver = "ws://127.0.0.1:34343";
 
 // Location of your proxy files with HTTP proxies (Sock proxies not supported yet!)
 config.proxies = "proxy.txt";
+config.botsPerIp = 1;
+config.onboardingTimer = 5000;
 
 // Maximum number of bots to load
 config.maxBots = "128";
