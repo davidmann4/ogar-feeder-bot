@@ -1,32 +1,27 @@
-# Agario-Feeder-Bot
+# agario-feeder-bot
 
-## What does it do?
-This project is a server sided script that runs multiple bots on one connection to go to a location. Information is sent from the user to the server telling it where the player is, server spawns multiple bots under proxies and itself having them go towards the player. Has many more options such as gathering mass before coming, Facebook login to use skins and mass, with much more features to come! This isn't recommended to use on Agar.io, but on your own Ogar server if you want to have a bit of fun with your server.
+skype group: https://join.skype.com/eQuN52iQVzZg
+common questions: https://github.com/davidmann4/agario-feeder-bot/issues?utf8=%E2%9C%93&q=label%3Aquestion+
 
-## How to install and use
-1. Visit https://github.com/dimotsai/agar-mini-map and install the userscript onto your favorite browser using TamperMonkey.
-2. Visit https://github.com/dimotsai/agar-mini-map/tree/master/server and install it onto the server you wish the bots to be run on, run the mini-map server.
-3. Visit https://github.com/pulviscriptor/agario-client and install it onto the server that the Agar-Mini-Map Server is on. (Main server)
-4. Now download the files in this project and put them up on the main server.
-5. Rename the config.sample.js to config.js and open it to edit the main options.
-6. Rename the proxy.sample.txt to proxy.txt and open it to add your HTTP proxies into it, each line is 5 connections. (NOPROXY to connect 5 bots with the server IP)
-7. Go onto Agar.io and confirm that the connection between the mini-map server and the client are successful.
+if you use this bot make sure to star the repo!
 
-### How to connect to Ogar
-1. Open up the config.js, edit the *config.gameServerIp* to your Ogar Server IP.
-2. That's it, now through the terminal or CMD launch the script using: node feeder.js
+* go to https://github.com/dimotsai/agar-mini-map
+* install userscript in your browser
+* git clone https://github.com/dimotsai/agar-mini-map and run the server 
+* get https://github.com/pulviscriptor/agario-client and build it ( npm install agario-client )
+* join a game
+* join the minimap server
+* F12 -> Console (Take IP GameServer from: "Connecting to ws://XXXX" and update config) <chorme>
+* node feeder.js
 
-## To-do list
-- [x] Allow Facebook login for the bots
-- [ ] Rebuild the main server and the client without using Agar-Mini-Map
-- [ ] Attempt a reconnection if first connections fails
-- [ ] Accept SOCK Proxies as well
-- [ ] Allow bots to follow the mouse
-- [ ] Allow bots to split and feed on a key press
-- [ ] Make bots avoid other players
+#want to help out?
+* checkout issues for tasks
+* write better readme.md
+* tell other people about this repo (marketing)
+* get more developers to contribute code
+* generate backlinks for SEO to this repo (post link to this repo on other sites)
+* favourite this repo
 
-## Stay in touch?
-Join the Skype group to message other people and to talk to other developers for resolving issues! Join by clicking: https://join.skype.com/eQuN52iQVzZg
 
-## Disclaimer and license
-This project is under the The MIT License (MIT). This means you may take the code and change it or share it as much as you want. Do note that botting is against the Terms of Service of Agar.io - this script is intended to be used on your private Ogar server.
+Disclaimer: 
+Botting is against the TOS - so please only use it on your own ogar server: https://github.com/OgarProject/Ogar
