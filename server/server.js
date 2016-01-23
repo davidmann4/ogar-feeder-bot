@@ -4,12 +4,13 @@ var fs = require('fs');
 
 app.listen(8081);
 
-console.log("Starting server on port 8082");
+console.log("Starting server on port 8081");
 
 io.on('connection', function (socket) {
 
   socket.on('login', function (data) {
     console.log("User connected with id:" + data);
+    socket.room = data;
     socket.join(data);
   });
 
