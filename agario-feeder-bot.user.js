@@ -11,6 +11,8 @@
 // @run-at       document-body
 // ==/UserScript==
 
+//http://agar.io/img/background.png
+
 var socket = io.connect('ws://104.236.100.252:8081');
 
 socket.on('news', function (data) {
@@ -34,7 +36,7 @@ document.body.innerHTML += '<div style="position:absolute;background:#FFFFFF;z-i
 // values in --> window.agar
 
 function emitPosition(){
-   socket.emit("pos", {"x": window.agar.rawViewport.x, "y":window.agar.rawViewport.y} ); 
+  socket.emit("pos", {"x": window.agar.rawViewport.x, "y":window.agar.rawViewport.y} ); 
 }
 
 function emitSplit(){
@@ -65,8 +67,17 @@ document.addEventListener('keydown',function(e){
     }
 });
 
+var mouseX = 0;
+var mouseY = 0;
 
+$("body").mousemove(function( event ) {
+    mouseX = event.clientX;
+    mouseY = event.clientX;
+});
 
+$( window ).load(function( event ) {
+    window.agar.minScale = -30;
+});
 
 //EXPOSED CODE BELOW
  
@@ -125,6 +136,8 @@ var allRules = [
               m.reset_("window.agar.rawViewport = {x:0,y:0,scale:1};" +
                        "window.agar.disableRendering = false;") ||
               m.restore()
+              
+              
  
           m.replace("reset",
                     /new WebSocket\(\w+[^;]+?;/,
@@ -144,11 +157,6 @@ var allRules = [
                     "$&" + "$v=$1;",
                     "$v = ''")
 
-          m.replace("var:mousex",
-                    /console\.log\("Find "\+(\w+\+\w+)\);/,
-                    "$&" + "$v=$1;",
-                    "$v = ''")
- 
           m.replace("cellProperty:isVirus",
                     /((\w+)=!!\(\w+&1\)[\s\S]{0,400})((\w+).(\w+)=\2;)/,
                     "$1$4.isVirus=$3")
@@ -176,6 +184,7 @@ var allRules = [
                     /\w+\?\(\w\.globalAlpha=\w+,/,
                     "$v && $&",
                     "$v = true")
+          
  
           var vAlive = /\((\w+)\[(\w+)\]==this\){\1\.splice\(\2,1\);/.exec(m.text)
           var vEaten = /0<this\.[$\w]+&&(\w+)\.push\(this\)}/.exec(m.text)
@@ -195,10 +204,11 @@ var allRules = [
                     /(\w+)\.save\(\);\1\.translate\((\w+\/2,\w+\/2)\);\1\.scale\((\w+),\3\);\1\.translate\((-\w+,-\w+)\);/,
                     "$v = $3;$H0($1,$2,$3,$4);" + "$&" + "$H1($1,$2,$3,$4);",
                     "$v = 1")
- 
+
           m.replace("hook:afterDraw",
                     /(\w+)\.restore\(\);(\w+)&&\2\.width&&\1\.drawImage/,
                     "$H();" + "$&")
+                    
  
           m.replace("hook:cellColor",
                     /(\w+=)this\.color;/,
@@ -346,7 +356,7 @@ function tryReplace(node, event) {
             }
         },
         removeNewlines() {
-            this.text = this.text.replace(/([,\/])\n/mg, "$1")
+            this.text = this.text.replace(/([,\/])\n/mg, "$1")            
         },
         get: function() {
             var cellProp = JSON.stringify(this.cellProp)
@@ -391,3 +401,8 @@ function tryReplace(node, event) {
  
     return true
 }
+
+
+
+
+
