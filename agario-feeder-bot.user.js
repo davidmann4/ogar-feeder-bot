@@ -11,18 +11,43 @@
 // @run-at       document-body
 // ==/UserScript==
 
-var socket = io.connect('ws://localhost:8081');
+var socket = io.connect('ws://104.236.100.252:8081');
 
 socket.on('news', function (data) {
     console.log(data);
     socket.emit('my other event', { my: 'data' });
 });
 
-socket.emit("login", "my_token");
+var client_uuid = localStorage.getItem('client_uuid');
 
+if(client_uuid == null){
+    console.log("generating a uuid for this user");
+    client_uuid =  Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    localStorage.setItem('client_uuid', client_uuid);
+}
+
+console.log(client_uuid);
+socket.emit("login", client_uuid);
+
+document.body.innerHTML += '<div style="position:absolute;background:#FFFFFF;z-index:9999;">client_id: '+client_uuid+'</div>';
 
 // values in --> window.agar
 
+function emitPosition(){
+   socket.emit("pos", {"x": window.agar.rawViewport.x, "y":window.agar.rawViewport.y} ); 
+}
+
+function emitSplit(){
+
+}
+
+function emitMassEject(){
+    
+}
+
+interval_id = setInterval(function() {
+   emitPosition();
+}, 100);
  
 //if key e is pressed do function split()
 document.addEventListener('keydown',function(e){
@@ -39,6 +64,8 @@ document.addEventListener('keydown',function(e){
         eject();
     }
 });
+
+
 
 
 //EXPOSED CODE BELOW

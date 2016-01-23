@@ -9,7 +9,7 @@ console.log("Starting server on port 8081");
 io.on('connection', function (socket) {
 
   socket.on('login', function (data) {
-    console.log(data);
+    console.log("User connected with id:" + data);
     socket.join(data.user);
   });
 

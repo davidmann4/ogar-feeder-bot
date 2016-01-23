@@ -416,65 +416,17 @@ var contains = function(needle) {
 };
 
 var WebSocket = require('ws');
-var msgpack = require('msgpack');
-var sleep = require('sleep');
-var valid_player_ids = null;
 var valid_player_pos = null;
+var socket = require('socket.io-client')('ws://104.236.100.252:8081');
+socket.emit("login", config.client_uuid);
 
-function miniMapConnectToServer() {
-    address = config.mapserver;
-    try {
-        var ws = new WebSocket(address, null);
-    } catch (ex) {
-        console.error(ex);
-        return false;
-    }
-    ws.binaryType = "arraybuffer";
+socket.on('pos', function (data) {
+    valid_player_pos = data;
+    console.log(data);
+});
 
-    ws.onopen = function() {
 
-        console.log('Connection to ' + address + ' is successful!');
-    }
 
-    ws.onmessage = function(event) {
-        var buffer = new Uint8Array(event.data);
-        var packet = msgpack.unpack(buffer);
-        switch (packet.type) {
-            case 128:
-
-                for (var i = 0; i < packet.data.addition.length; ++i) {
-                    var cell = packet.data.addition[i];
-
-                    if (contains.call(valid_player_ids, cell.id)) {
-                        //console.log(cell);
-                        valid_player_pos = cell;
-                        return;
-                    }
-                }
-                break;
-            case 129:
-                players = packet.data;
-                //console.log(players); 
-                if (players[0]["name"].length != 0) {
-                    valid_player_ids = players[0]["ids"];
-                }
-                break;
-        }
-    }
-
-    ws.onerror = function() {
-        console.error('Connection to Map Server failed.');
-    }
-
-    ws.onclose = function() {
-        map_server = null;
-        console.log('Map server connection lost!');
-    }
-
-    map_server = ws;
-}
-
-miniMapConnectToServer();
 
 
 
