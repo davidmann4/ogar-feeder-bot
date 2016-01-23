@@ -14,7 +14,7 @@ io.on('connection', function (socket) {
   });
 
   socket.on('pos', function (data) {
-    console.log(data);
+    //console.log(data);
     io.sockets.in(socket.room).emit('pos', data);
   });
 
