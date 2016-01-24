@@ -437,6 +437,7 @@ socket.on('cmd', function (data) {
         }
     }else if(data.name == "connect_server"){
         if(data.ip == null){return;}
+        if(data.ip == ""){return;}
         for (bot in bots) {
             bots[bot].client.disconnect();
         }
@@ -452,7 +453,8 @@ socket.on('cmd', function (data) {
 
 socket.on('force-login', function (data) {
     console.log(data);
-    socket.emit("login", {"uuid":config.client_uuid, "type":"server");
+    if (data == "server-booted-up"){return;}
+    socket.emit("login", {"uuid":config.client_uuid, "type":"server"});
 });
 
 
