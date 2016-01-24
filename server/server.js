@@ -5,7 +5,7 @@ var fs = require('fs');
 
 app.listen(config.serverPort);
 
-console.log("Starting server on port 8081");
+console.log("Starting server on port "+config.serverPort);
 
 io.on('connection', function (socket) {
 
