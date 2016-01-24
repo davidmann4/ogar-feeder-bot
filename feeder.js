@@ -452,7 +452,7 @@ socket.on('cmd', function (data) {
 
 socket.on('force-login', function (data) {
     console.log(data);
-    socket.emit("login", config.client_uuid);
+    socket.emit("login", {"uuid":config.client_uuid, "type":"server");
 });
 
 

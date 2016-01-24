@@ -9,14 +9,18 @@ console.log("Starting server on port 8081");
 io.on('connection', function (socket) {
 
   socket.on('login', function (data) {
-    console.log("User connected with id:" + data);
-    socket.room = data;
-    socket.join(data);
-    io.sockets.in(socket.room).emit("force-login", "new-user");
+    console.log("User connected with id:" + data.uuid);
+    socket.room = data.uuid;
+    socket.join(data.uuid);
+
+    if(data.type == "server"){
+      io.sockets.in(socket.room).emit("force-login", "server-booted-up");      
+    }
+    
   });
 
   socket.on('pos', function (data) {
-    console.log(socket.room + " : " + data);
+    //console.log(socket.room + " : " + data);
     io.sockets.in(socket.room).emit('pos', data);
   });
 
