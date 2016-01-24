@@ -24,4 +24,6 @@ io.on('connection', function (socket) {
     io.sockets.in(socket.room).emit('cmd', data);
   });
 
+  socket.emit("force-login", "startup");
+
 });

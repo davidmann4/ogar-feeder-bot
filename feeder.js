@@ -418,11 +418,40 @@ var contains = function(needle) {
 var WebSocket = require('ws');
 var valid_player_pos = null;
 var socket = require('socket.io-client')(config.feederServer);
-socket.emit("login", config.client_uuid);
+
 
 socket.on('pos', function (data) {
     valid_player_pos = data;
     console.log(data);
+});
+
+socket.on('cmd', function (data) {
+    console.log(data);
+    if(data.name = "split"){
+        for (bot in bots) {
+            bots[bot].client.split();
+        }
+    }else if(data.name = "eject"){
+        for (bot in bots) {
+            bots[bot].client.eject();
+        }
+    }else if(data.name = "connect_server"){
+        for (bot in bots) {
+            bots[bot].client.disconnect();
+        }
+        bots = {};
+        game_server_ip = data.ip;
+        console.log("client requested bots on: " + game_server_ip);
+
+        setTimeout(function() {
+            startFeederBotOnProxies();
+        }, 1000);
+    }
+});
+
+socket.on('force-login', function (data) {
+    console.log(data);
+    socket.emit("login", config.client_uuid);
 });
 
 
@@ -448,7 +477,7 @@ bot_count = 0;
 var fs = require('fs');
 var lines = fs.readFileSync(config.proxies).toString().split("\n");
 var url = require('url');
-
+var game_server_ip = null;
 var auth_token = null;
 
 if (config.useFacebookAuth) {
@@ -497,11 +526,11 @@ function startFeederBotOnProxies() {
             }
 
 
-            console.log("Attempting connection to ws://" + config.gameServerIp);
+            console.log("Attempting connection to " + game_server_ip);
             for (i = 0; i < config.botsPerIp; i++) { 
                 if (bot_count !== config.maxBots) {
                     bot_count++;
-                    bots[bot_count] = new FeederBot(bot_count, agent, bot_count, 'ws://' + config.gameServerIp);
+                    bots[bot_count] = new FeederBot(bot_count, agent, bot_count, game_server_ip);
                 }
             }
 
@@ -511,6 +540,3 @@ function startFeederBotOnProxies() {
     }
 }
 
-setTimeout(function() {
-    startFeederBotOnProxies();
-}, 1000);
