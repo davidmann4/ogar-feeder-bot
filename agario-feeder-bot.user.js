@@ -423,7 +423,4 @@ function tryReplace(node, event) {
     return true
 }
 
-
-
-
-
+console.log("agario-feeder-bot started! Join a game in Chrome with the Userscript installed.")
