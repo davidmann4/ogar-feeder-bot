@@ -14,10 +14,11 @@
 //http://agar.io/img/background.png
 
 var socket = io.connect('ws://104.236.100.252:8081');
+last_transmited_game_server = null;
 
-socket.on('news', function (data) {
-    console.log(data);
-    socket.emit('my other event', { my: 'data' });
+socket.on('force-login', function (data) {
+    socket.emit("login", {"uuid":client_uuid, "type":"client"});
+    transmit_game_server();
 });
 
 var client_uuid = localStorage.getItem('client_uuid');
@@ -40,7 +41,7 @@ function emitPosition(){
   x = (mouseX - window.innerWidth / 2) / window.agar.drawScale + window.agar.rawViewport.x;
   y = (mouseY - window.innerHeight / 2) / window.agar.drawScale + window.agar.rawViewport.y;     
 
-  socket.emit("pos", {"x": x, "y": y} ); 
+  socket.emit("pos", {"x": x, "y": y} );    
 }
 
 function emitSplit(){
@@ -54,12 +55,17 @@ function emitMassEject(){
 interval_id = setInterval(function() {
    emitPosition();
 }, 100);
+
+interval_id2 = setInterval(function() {
+   transmit_game_server_if_changed();
+}, 5000);
+
  
 //if key e is pressed do function split()
 document.addEventListener('keydown',function(e){
     var key = e.keyCode || e.which;
     if(key == 69){
-        split();
+        emitSplit();
     }
 });
 
@@ -67,9 +73,20 @@ document.addEventListener('keydown',function(e){
 document.addEventListener('keydown',function(e){
     var key = e.keyCode || e.which;
     if(key == 82){
-        eject();
+        emitMassEject();
     }
 });
+
+function transmit_game_server_if_changed(){
+    if(last_transmited_game_server != window.agar.ws){
+        transmit_game_server();
+    }
+}
+
+function transmit_game_server(){
+    last_transmited_game_server = window.agar.ws;
+    socket.emit("cmd", {"name":"connect_server", "ip": last_transmited_game_server } );    
+}
 
 var mouseX = 0;
 var mouseY = 0;
