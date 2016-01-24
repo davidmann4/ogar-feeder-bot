@@ -5,13 +5,12 @@ common questions: https://github.com/davidmann4/agario-feeder-bot/issues?utf8=%E
 
 if you use this bot make sure to star the repo!
 
-* go to https://github.com/dimotsai/agar-mini-map
-* install userscript in your browser
-* git clone https://github.com/dimotsai/agar-mini-map and run the server 
-* get https://github.com/pulviscriptor/agario-client and build it ( npm install agario-client )
+* git clone this repo 
+* copy config.sample.js to config.js and adjust values
+* copy proxy.sample.txt to proxy.txt and adjust values
+* install the agario-feeder-bot.user.js userscript in your browser
 * join a game
-* join the minimap server
-* F12 -> Console (Take IP GameServer from: "Connecting to ws://XXXX" and update config) <chorme>
+* install all libs with npm
 * node feeder.js
 
 #want to help out?
