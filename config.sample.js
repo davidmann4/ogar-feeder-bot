@@ -10,8 +10,10 @@ config.verbosityLevel = 1;
 config.userAgent = 'agario-feeder-bot';
 
 // you can use the public server or run your own node server/server.js
-config.serverPort = 8081;
 config.feederServer = "ws://104.236.100.252:8081";
+
+// if you run your own server it will run on this port
+config.serverPort = 8081;
 config.client_uuid = "YOUR_UUID"; // after you install the userscript it will show you a UUID in the corner
 
 // Location of your proxy files with HTTP proxies (Sock proxies not supported yet!)
