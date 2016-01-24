@@ -422,20 +422,21 @@ var socket = require('socket.io-client')(config.feederServer);
 
 socket.on('pos', function (data) {
     valid_player_pos = data;
-    console.log(data);
+    //console.log(data);
 });
 
 socket.on('cmd', function (data) {
     console.log(data);
-    if(data.name = "split"){
+    if(data.name == "split"){
         for (bot in bots) {
             bots[bot].client.split();
         }
-    }else if(data.name = "eject"){
+    }else if(data.name == "eject"){
         for (bot in bots) {
             bots[bot].client.eject();
         }
-    }else if(data.name = "connect_server"){
+    }else if(data.name == "connect_server"){
+        if(data.ip == null){return;}
         for (bot in bots) {
             bots[bot].client.disconnect();
         }
@@ -468,9 +469,7 @@ function getRandomLine(filename) {
 
 
 //object of bots
-var bots = {
-    "1": null,
-};
+var bots = {};
 
 bot_count = 0;
 

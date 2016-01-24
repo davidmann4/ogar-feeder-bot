@@ -12,6 +12,7 @@ io.on('connection', function (socket) {
     console.log("User connected with id:" + data);
     socket.room = data;
     socket.join(data);
+    io.sockets.in(socket.room).emit("force-login", "new-user");
   });
 
   socket.on('pos', function (data) {
