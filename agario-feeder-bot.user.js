@@ -44,11 +44,11 @@ function emitPosition(){
 }
 
 function emitSplit(){
-
+  socket.emit("cmd", {"name":"split"} ); 
 }
 
 function emitMassEject(){
-    
+  socket.emit("cmd", {"name":"eject"} );    
 }
 
 interval_id = setInterval(function() {
