@@ -317,7 +317,7 @@ FeederBot.prototype = {
             if(config.enableSaveMoveTo){
                 bot.safeMoveTo(valid_player_pos["x"], valid_player_pos["y"]);
             }else{
-                bot.moveTo(valid_player_pos["x"], valid_player_pos["y"]);
+                bot.client.moveTo(valid_player_pos["x"], valid_player_pos["y"]);
             }
             
 
