@@ -1,8 +1,9 @@
+var config = require('../config');
 var app = require('http').createServer()
 var io = require('socket.io')(app);
 var fs = require('fs');
 
-app.listen(8081);
+app.listen(config.serverPort);
 
 console.log("Starting server on port 8081");
 
