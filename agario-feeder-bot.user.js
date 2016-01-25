@@ -8,7 +8,7 @@
 // @match        http://agar.io/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.4/socket.io.min.js
 // @grant        none
-// @run-at       document-body
+// @run-at       document-start
 // ==/UserScript==
 
 //http://agar.io/img/background.png
@@ -32,7 +32,6 @@ if(client_uuid == null){
 console.log(client_uuid);
 socket.emit("login", client_uuid);
 
-document.body.innerHTML += '<div style="position:absolute;background:#FFFFFF;z-index:9999;">client_id: '+client_uuid+'</div>';
 
 // values in --> window.agar
 
