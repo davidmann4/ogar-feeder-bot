@@ -6,6 +6,7 @@ common questions: https://github.com/davidmann4/agario-feeder-bot/issues?utf8=%E
 if you use this bot make sure to star the repo!
 
 * git clone this repo 
+* npm install package.json
 * copy config.sample.js to config.js and adjust values
 * copy proxy.sample.txt to proxy.txt and adjust values
 * install the agario-feeder-bot.user.js userscript in your browser
