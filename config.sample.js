@@ -27,13 +27,9 @@ config.maxBots = "128";
 config.useRandomSkinName = true; // Set to true to use random name
 config.useStaticName = "AgarioFeederBot"; // If above is false, us this skin name
 
-// Set this to the server IP (Agar or Ogar server IP).
-config.gameServerIp = "127.0.0.1:443"
-
 // Edit this value so bots collect mass before coming towards the player
 config.minimumMassBeforeFeed = 0;
 config.enableSaveMoveTo = false;
-
 
 config.useFacebookAuth = false; // Set to true for Facebook authentication
 config.account.token = ""; // Auth token which is only valid for 2 hours - better use cookies
