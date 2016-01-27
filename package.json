@@ -1,0 +1,33 @@
+{
+  "name": "agario-feeder-bot",
+  "version": "1.0.0",
+  "description": "A Bot for agar.io which follows your mouse.",
+  "main": "feeder.js",
+  "dependencies": {
+    "agario-client": "^1.2.4",
+    "https-proxy-agent": "^1.0.0",
+    "msgpack": "^1.0.2",
+    "sleep": "^3.0.0",
+    "ws": "^1.0.1",
+    "socket.io": "^1.4.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidmann4/agario-feeder-bot.git"
+  },
+  "keywords": [
+    "agario",
+    "feeder",
+    "bot"
+  ],
+  "author": "David Mann",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davidmann4/agario-feeder-bot/issues"
+  },
+  "homepage": "https://github.com/davidmann4/agario-feeder-bot#readme"
+}
