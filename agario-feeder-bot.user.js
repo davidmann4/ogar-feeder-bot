@@ -8,10 +8,12 @@
 // @match        http://agar.io/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.4/socket.io.min.js
 // @grant        none
-// @run-at       document-body
+// @run-at       document-start
 // ==/UserScript==
 
 //http://agar.io/img/background.png
+
+setTimeout(function() {
 
 var socket = io.connect('ws://104.236.100.252:8081');
 last_transmited_game_server = null;
@@ -32,12 +34,11 @@ if(client_uuid == null){
 console.log(client_uuid);
 socket.emit("login", client_uuid);
 
-document.body.innerHTML += '<div style="position:absolute;background:#FFFFFF;z-index:9999;">client_id: '+client_uuid+'</div>';
+//document.body.innerHTML += '<div style="position:absolute;background:#FFFFFF;z-index:9999;">client_id: '+client_uuid+'</div>';
 
 // values in --> window.agar
 
-function emitPosition(){  
-    
+function emitPosition(){      
   x = (mouseX - window.innerWidth / 2) / window.agar.drawScale + window.agar.rawViewport.x;
   y = (mouseY - window.innerHeight / 2) / window.agar.drawScale + window.agar.rawViewport.y;     
 
@@ -96,9 +97,8 @@ $("body").mousemove(function( event ) {
     mouseY = event.clientY;
 });
 
-$( window ).load(function( event ) {
     window.agar.minScale = -30;
-});
+   }, 5000);
 
 //EXPOSED CODE BELOW
  
