@@ -1,7 +1,6 @@
 var config = require('../config');
-var app = require('http').createServer()
+var app = require('http').createServer();
 var io = require('socket.io')(app);
-var fs = require('fs');
 
 app.listen(config.serverPort);
 
