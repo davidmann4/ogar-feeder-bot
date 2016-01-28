@@ -184,7 +184,7 @@ FeederBot.prototype = {
 
     in_circle: function(dx, x, center_x, dy, y, center_y, radius) {
         //square_dist = (center_x - x) ^ 2 + (center_y - y) ^ 2;
-        //return square_dist <= (radius/2) ^ 2;
+        //return square_dist <= (radius / 2) ^ 2;
         dx = x - center_x;
         dy = y - center_y;
         return dx * dx + dy * dy <= radius * radius;
