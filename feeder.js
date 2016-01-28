@@ -23,7 +23,7 @@ function FeederBot(bot_id, agent, bot_number, server) {
     this.client.auth_token = auth_token;
     this.client.headers['user-agent'] = config.userAgent;
     this.isOnFeedMission = false;
-    this.onboard_client(server, bot_number)
+    this.onboard_client(server, bot_number);
 }
 
 FeederBot.prototype = {
@@ -59,7 +59,7 @@ FeederBot.prototype = {
             bot.client.spawn(bot.nickname);
             //we will search for target to eat every 100ms
             bot.interval_id = setInterval(function() {
-                bot.recalculateTarget()
+                bot.recalculateTarget();
             }, 100);
         });
 
@@ -78,7 +78,7 @@ FeederBot.prototype = {
 
         bot.client.once('leaderBoardUpdate', function(old, leaders) {
             var name_array = leaders.map(function(ball_id) {
-                return bot.client.balls[ball_id].name || 'unnamed'
+                return bot.client.balls[ball_id].name || 'unnamed';
             });
             if (config.verbosityLevel > 0) {
                 bot.log('Server Leaderboard: ' + name_array.join(' - '));
@@ -101,7 +101,7 @@ FeederBot.prototype = {
 
             if (reason.reason == 'merge') {
                 if (config.verbosityLevel > 1) {
-                    bot.log('Merged with another cell. Bot_' + ball_id + ' now has ' + bot.client.my_balls.length + ' balls.')
+                    bot.log('Merged with another cell. Bot_' + ball_id + ' now has ' + bot.client.my_balls.length + ' balls.');
                 }
             } else {
                 if (config.verbosityLevel > 1) {
@@ -141,15 +141,15 @@ FeederBot.prototype = {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y1 - y2, 2));
     },
 
-    getAvailableTransporter: function() {
+    getAvailableTransporter: function(possible_transporter, ball_id, bot_ball) {
         var bot = this;
         var my_ball = bot.client.balls[bot.client.my_balls[0]];
         if (!my_ball) return;
 
-        possible_transporter = null
+        possible_transporter = null;
 
         for (var bot_id in bots) {
-            ball_id = bots[bot_id].id
+            ball_id = bots[bot_id].id;
             bot_ball = bots[bot_id].client.balls[bots[bot_id].client.my_balls[0]];
             if (!bot_ball) continue;
             if (bot.getDistanceBetweenBallAndPosition(my_ball, bot_ball.x, bot_ball.y) > 2000) {
@@ -170,27 +170,27 @@ FeederBot.prototype = {
         return Math.ceil(Math.sqrt(100 * mass));
     },
 
-    canSplitFeedPlayer: function(botMass, otherMass) {
+    canSplitFeedPlayer: function(requiredMass, otherMass, botMass) {
         requiredMass = otherMass * 1.25;
-        return requiredMass < botMass
+        return requiredMass < botMass;
     },
 
-    playerInRange: function(my_ball, playerX, playerY, playerSize, range) {
+    playerInRange: function(bot_distance, my_ball, playerX, playerY, ditance_needed, range) {
         var bot = this;
-        bot_distance = bot.getDistanceBetweenBallAndPosition(my_ball, playerX, playerY) - bot.getMassPixelRadius(valid_player_pos.size)
-        ditance_needed = range //400 - bot.getMassPixelRadius(my_ball.size);
+        bot_distance = bot.getDistanceBetweenBallAndPosition(my_ball, playerX, playerY) - bot.getMassPixelRadius(valid_player_pos.size);
+        ditance_needed = range; //400 - bot.getMassPixelRadius(my_ball.size);
         return bot_distance < ditance_needed;
     },
 
-    in_circle: function(center_x, center_y, radius, x, y) {
+    in_circle: function(dx, x, center_x, dy, y, center_y, radius) {
         //square_dist = (center_x - x) ^ 2 + (center_y - y) ^ 2;
         //return square_dist <= (radius/2) ^ 2;
-        dx = x - center_x
-        dy = y - center_y
-        return dx * dx + dy * dy <= radius * radius
+        dx = x - center_x;
+        dy = y - center_y;
+        return dx * dx + dy * dy <= radius * radius;
     },
 
-    getCoordinatesOfCircleAngle: function(center_x, center_y, radius, angle) {
+    getCoordinatesOfCircleAngle: function(x, center_x, radius, angle, y, center_y) {
         x = Math.ceil(center_x + radius * Math.cos(angle));
         y = Math.ceil(center_y + radius * Math.sin(angle));
         return {
@@ -199,7 +199,7 @@ FeederBot.prototype = {
         };
     },
 
-    checkIfPathCrossesBall: function(from_x, from_y, dest_x, dest_y, ball_id) {
+    checkIfPathCrossesBall: function(bot, ball, ball_id, from_x, from_y, dest_x, dest_y) {
         bot = this;
         ball = bot.client.balls[ball_id];
 
@@ -234,7 +234,7 @@ FeederBot.prototype = {
         return false;
     },
 
-    getNearestBallOnPath: function(from_x, from_y, dest_x, dest_y) {
+    getNearestBallOnPath: function(bot, my_ball, ball_id, ball, from_x, from_y, dest_x, dest_y) {
         bot = this;
         my_ball = bot.client.balls[bot.client.my_balls[0]];
 
@@ -253,7 +253,7 @@ FeederBot.prototype = {
         return null;
     },
 
-    safeMoveTo: function(x, y) {
+    safeMoveTo: function(bot, my_ball, safeX, x, safeY, y, nearest_obstacle, ball, bestXDistance, bestX, bestY, pos, test_path, test_path2, distance1, distance2, totalDistance) {
         bot = this;
         my_ball = bot.client.balls[bot.client.my_balls[0]];
 
@@ -269,12 +269,12 @@ FeederBot.prototype = {
             bestY = 0;
 
             for (var i = 0; i < 360; i = i + 16) {
-                pos = bot.getCoordinatesOfCircleAngle(ball.x, ball.y, bot.getMassPixelRadius(ball.mass) + bot.getMassPixelRadius(my_ball.mass), i)
+                pos = bot.getCoordinatesOfCircleAngle(ball.x, ball.y, bot.getMassPixelRadius(ball.mass) + bot.getMassPixelRadius(my_ball.mass), i);
                 test_path = bot.getNearestBallOnPath(pos.x, pos.y, my_ball.x, my_ball.y);
                 test_path2 = bot.getNearestBallOnPath(pos.x, pos.y, x, y);
 
                 if (test_path == null && test_path2 == null) {
-                    console.log("this path is safe.")
+                    console.log("this path is safe.");
 
                     distance1 = bot.getDistanceBetweenPositions(pos.x, pos.y, my_ball.x, my_ball.y);
                     distance2 = bot.getDistanceBetweenPositions(pos.x, pos.y, x, y);
@@ -286,27 +286,27 @@ FeederBot.prototype = {
                         console.log("found safe spot!");
                     }
                 } else {
-                    console.log("pathfinding: this path is not safe.")
+                    console.log("pathfinding: this path is not safe.");
                 }
             }
 
             if (bestX == 0 && bestY == 0) {
-                console.log("pathfinding: impossible.")
+                console.log("pathfinding: impossible.");
                 return;
             } else {
                 safeX = bestX;
                 safeY = bestY;
             }
 
-            console.log("pathfinding done:")
-            console.log(safeX)
-            console.log(safeY)
+            console.log("pathfinding done:");
+            console.log(safeX);
+            console.log(safeY);
         }
 
         bot.client.moveTo(safeX, safeY);
     },
 
-    recalculateTarget: function() {
+    recalculateTarget: function(got_tranporter, transporter) {
         var bot = this;
         var candidate_ball = null;
         var candidate_distance = 0;
@@ -327,7 +327,7 @@ FeederBot.prototype = {
                 }
             }
 
-            return
+            return;
         }
 
         for (var ball_id in bot.client.balls) {
@@ -423,7 +423,7 @@ socket.on('pos', function(data) {
     //console.log(data);
 });
 
-socket.on('cmd', function(data) {
+socket.on('cmd', function(data, bot) {
     console.log(data);
     if (data.name == "split") {
         for (bot in bots) {
@@ -467,11 +467,11 @@ socket.on('force-login', function(data) {
 fs = require('fs');
 var HttpsProxyAgent = require('https-proxy-agent');
 
-function getRandomLine(filename) {
+function getRandomLine(filename, line) {
     var fs = require('fs');
     var lines = fs.readFileSync(filename).toString().split("\n");
     line = lines[Math.floor(Math.random() * lines.length)];
-    return line
+    return line;
 }
 
 //object of bots
@@ -502,7 +502,7 @@ if (config.account.token != "") {
     auth_token = config.account.token;
 }
 
-function startFeederBotOnProxies() {
+function startFeederBotOnProxies(proxy_line, proxy, i, bot_count) {
     console.log("Auth_Token: " + auth_token);
     for (proxy_line in lines) {
 
