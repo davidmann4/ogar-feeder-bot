@@ -31,7 +31,7 @@ if(client_uuid == null){
     localStorage.setItem('client_uuid', client_uuid);
 }
 
-console.log(client_uuid);
+console.log("This is your config.client_uuid " + client_uuid);
 socket.emit("login", client_uuid);
 
 //document.body.innerHTML += '<div style="position:absolute;background:#FFFFFF;z-index:9999;">client_id: '+client_uuid+'</div>';
