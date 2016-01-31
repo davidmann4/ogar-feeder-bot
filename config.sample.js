@@ -9,6 +9,7 @@ config.verbosityLevel = 1;
 // Useragent the bot will use
 config.userAgent = 'agario-feeder-bot';
 
+// the feederServer connects your node script with your browser (mouse coordinates & commands)
 // you can use the public server or run your own node server/server.js
 // if you are new just use the free public server ws://104.236.100.252:8081
 config.feederServer = "ws://104.236.100.252:8081";
