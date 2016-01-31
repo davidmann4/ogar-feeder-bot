@@ -1,7 +1,10 @@
 # agario-feeder-bot
 
 skype group: https://join.skype.com/eQuN52iQVzZg
+
 common questions: https://github.com/davidmann4/agario-feeder-bot/issues?utf8=%E2%9C%93&q=label%3Aquestion+
+
+tutorial video: https://www.youtube.com/watch?v=FVNNo93ZVGg
 
 if you use this bot make sure to star the repo!
 
