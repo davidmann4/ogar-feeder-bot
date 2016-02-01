@@ -8,8 +8,11 @@ tutorial video: https://www.youtube.com/watch?v=FVNNo93ZVGg
 
 if you use this bot make sure to star the repo!
 
-* git clone this repo 
-* npm install package.json
+### Installation guide
+
+* git clone this repo
+* cd to the repo e.g. (cd agario-feeder-bot/)
+* npm install
 * copy config.sample.js to config.js and adjust values
 * copy proxy.sample.txt to proxy.txt and adjust values
 * install the agario-feeder-bot.user.js userscript in your browser
@@ -17,7 +20,7 @@ if you use this bot make sure to star the repo!
 * install all libs with npm
 * node feeder.js
 
-#want to help out?
+### Want to help out?
 * checkout issues for tasks
 * write better readme.md
 * tell other people about this repo (marketing)
