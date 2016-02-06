@@ -523,7 +523,7 @@ var proxy_mode = "HTTP";
 function startFeederBotOnProxies() {
     console.log("Auth_Token: " + auth_token);
     for (proxy_line in lines) {
-<<<<<<< HEAD
+
         if(lines[proxy_line] == "#HTTP"){
             proxy_mode = "HTTP";
         }else if(lines[proxy_line] == "#SOCKS4"){
@@ -531,10 +531,7 @@ function startFeederBotOnProxies() {
         }else if(lines[proxy_line] == "#SOCKS5"){
             proxy_mode = "SOCKS5";
         }
-        
-=======
 
->>>>>>> 1776d373f59121a17ce78dd62c2b245cbc8b176d
         if (lines[proxy_line][0] == "#" || lines[proxy_line].length < 3) {
             continue;
         }
