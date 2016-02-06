@@ -1,4 +1,5 @@
-# agario-feeder-bot uses http proxies
+# agario-feeder-bot uses http,socks4 or socks5 proxies
+# put your proxies into the correct section
 # each line will try to connect 5 clients
 # if you put in a line with NOPROXY, the server itself will be used for 5 clients
 
