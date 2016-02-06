@@ -15,7 +15,7 @@ config.userAgent = 'agario-feeder-bot';
 config.feederServer = "ws://104.236.100.252:8081";
 
 config.serverPort = 8081; // optional: setting only used if you run your own feederServer - it will run on this port
-config.client_uuid = "YOUR_UUID"; // after you install the userscript press F12 and search for a debug msg on the console tab
+config.client_uuid = "YOUR_UUID"; // after you install the userscript press F12 and search for a debug msg on the console
 
 // Location of your proxy files with HTTP proxies (Sock proxies not supported yet!)
 config.proxies = "proxy.txt";
