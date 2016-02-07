@@ -503,19 +503,19 @@ if (config.account.token != "") {
     auth_token = config.account.token;
 }
 
-function createAgent(ip,type) {
+function createAgent(ip, type) {
 
     data = ip.split(":");
     console.log("sdsad");
     console.log(data);
 
     return new Socks.Agent({
-            proxy: {
-                ipaddress: data[0],
-                port: parseInt(data[1]),
-                type: parseInt(type)
-            }}
-    );
+        proxy: {
+            ipaddress: data[0],
+            port: parseInt(data[1]),
+            type: parseInt(type)
+        }
+    });
 }
 
 var proxy_mode = "HTTP";
@@ -524,11 +524,11 @@ function startFeederBotOnProxies() {
     console.log("Auth_Token: " + auth_token);
     for (proxy_line in lines) {
 
-        if(lines[proxy_line] == "#HTTP"){
+        if (lines[proxy_line] == "#HTTP") {
             proxy_mode = "HTTP";
-        }else if(lines[proxy_line] == "#SOCKS4"){
+        } else if (lines[proxy_line] == "#SOCKS4") {
             proxy_mode = "SOCKS4";
-        }else if(lines[proxy_line] == "#SOCKS5"){
+        } else if (lines[proxy_line] == "#SOCKS5") {
             proxy_mode = "SOCKS5";
         }
 
@@ -549,15 +549,15 @@ function startFeederBotOnProxies() {
             var opts = url.parse(proxy);
 
             if (proxy != null) {
-                if(proxy_mode=="HTTP"){
+                if (proxy_mode == "HTTP") {
                     proxy = "http://" + proxy;
                     agent = HttpsProxyAgent(opts);
-                }else if(proxy_mode=="SOCKS4"){
-                    agent = createAgent(lines[proxy_line],4);
-                }else if(proxy_mode=="SOCKS5"){
-                    agent = createAgent(lines[proxy_line],5);
+                } else if (proxy_mode == "SOCKS4") {
+                    agent = createAgent(lines[proxy_line], 4);
+                } else if (proxy_mode == "SOCKS5") {
+                    agent = createAgent(lines[proxy_line], 5);
                 }
-                
+
             } else {
                 var agent = null;
             }
