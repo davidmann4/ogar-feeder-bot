@@ -29,6 +29,13 @@ io.on('connection', function(socket) {
     console.log(data);
     io.sockets.in(socket.room).emit('cmd', data);
   });
+  
+  socket.on("spawn-count", function(data) {
+    socket.emit("spawn-count", {
+      "count": data,
+      "max": config.maxBots
+      });
+    });
 
   socket.emit("force-login", "startup");
 
