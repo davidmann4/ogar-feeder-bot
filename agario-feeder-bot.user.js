@@ -24,7 +24,7 @@ socket.on('force-login', function (data) {
 });
 
 socket.on('spawn-count', function (data) {
-    console.log("Bot Spawn Count: " + data.count + " / " + data.max);
+    console.log("Bot Count: " + data.count + "/" + data.max);
 });
 
 var client_uuid = localStorage.getItem('client_uuid');
