@@ -574,7 +574,7 @@ function startFeederBotOnProxies() {
 
             console.log("Attempting connection to " + game_server_ip);
             for (i = 0; i < config.botsPerIp; i++) {
-                if (bot_count != config.maxBots) {
+                if (spawnCount != config.maxBots) {
                     bot_count++;
                     bots[bot_count] = new FeederBot(bot_count, agent, bot_count, game_server_ip);
                 }
