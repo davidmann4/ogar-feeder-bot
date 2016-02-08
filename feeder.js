@@ -4,6 +4,7 @@ var config = require('./config');
 var names = require('./names');
 
 var AgarioClient = require('agario-client'); //Use this in your scripts
+spawnCount = 0;
 
 function FeederBot(bot_id, agent, bot_number, server) {
     this.bot_id = bot_id; //ID of bot for logging
@@ -57,6 +58,8 @@ FeederBot.prototype = {
                 bot.log('Connection Success, spawning');
             }
             bot.client.spawn(bot.nickname);
+            spawnCount++;
+            socket.emit("spawn-count", spawnCount);
             //we will search for target to eat every 100ms
             bot.interval_id = setInterval(function() {
                 bot.recalculateTarget()
@@ -122,6 +125,9 @@ FeederBot.prototype = {
             if (config.verbosityLevel > 0) {
                 bot.log('Disconnected from the server.');
             }
+            if (spawnCount > 0)
+            { spawnCount--; }
+            socket.emit("spawn-count", spawnCount);
         });
 
         bot.client.on('reset', function() { //when client clears everything (connection lost?)
@@ -568,7 +574,7 @@ function startFeederBotOnProxies() {
 
             console.log("Attempting connection to " + game_server_ip);
             for (i = 0; i < config.botsPerIp; i++) {
-                if (bot_count !== config.maxBots) {
+                if (bot_count != config.maxBots) {
                     bot_count++;
                     bots[bot_count] = new FeederBot(bot_count, agent, bot_count, game_server_ip);
                 }
