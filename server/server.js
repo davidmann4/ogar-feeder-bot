@@ -31,7 +31,7 @@ io.on('connection', function(socket) {
   });
   
   socket.on("spawn-count", function(data) {
-    socket.emit("spawn-count", {
+    io.emit("spawn-count", {
       "count": data,
       "max": config.maxBots
       });
