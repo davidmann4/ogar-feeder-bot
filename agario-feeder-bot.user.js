@@ -23,6 +23,10 @@ socket.on('force-login', function (data) {
     transmit_game_server();
 });
 
+socket.on('spawn-count', function (data) {
+    console.log("Bot Spawn Count: " + data.count + " / " + data.max);
+});
+
 var client_uuid = localStorage.getItem('client_uuid');
 
 if(client_uuid == null){
