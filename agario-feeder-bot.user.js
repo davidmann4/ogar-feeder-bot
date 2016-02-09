@@ -38,6 +38,8 @@ if(client_uuid == null){
 console.log("This is your config.client_uuid " + client_uuid);
 socket.emit("login", client_uuid);
 
+    $("#instructions").replaceWith('<br><div class="input-group"><span class="input-group-addon" id="basic-addon1">UUID</span><input type="text" value="' + client_uuid + '" readonly class="form-control"</div>');
+
 //document.body.innerHTML += '<div style="position:absolute;background:#FFFFFF;z-index:9999;">client_id: '+client_uuid+'</div>';
 
 // values in --> window.agar
