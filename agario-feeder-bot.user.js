@@ -16,6 +16,7 @@
 setTimeout(function() {
 
 var socket = io.connect('ws://104.236.100.252:8081');
+var canMove = true;
 last_transmited_game_server = null;
 
 socket.on('force-login', function (data) {
@@ -69,16 +70,19 @@ interval_id2 = setInterval(function() {
 //if key e is pressed do function split()
 document.addEventListener('keydown',function(e){
     var key = e.keyCode || e.which;
-    if(key == 69){
-        emitSplit();
-    }
-});
+    switch(key)
+    {
+        case 68://d has been pressed.
+            canMove = !canMove;
+            break;
 
-//if key r is pressed do function eject()
-document.addEventListener('keydown',function(e){
-    var key = e.keyCode || e.which;
-    if(key == 82){
-        emitMassEject();
+        case 69://e has been pressed.
+            emitSplit();
+            break;
+
+        case 82://r has been pressed.
+            emitMassEject();
+            break;
     }
 });
 
@@ -97,6 +101,10 @@ var mouseX = 0;
 var mouseY = 0;
 
 $("body").mousemove(function( event ) {
+    if (!canMove)
+    {
+        event.preventDefault();
+    }
     mouseX = event.clientX;
     mouseY = event.clientY;
 });
