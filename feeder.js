@@ -547,8 +547,9 @@ function startFeederBotOnProxies() {
             continue;
         }
 
-        proxy = lines[proxy_line];
-        console.log(proxy_mode + " ; " + proxy);
+        proxy = "http://" + lines[proxy_line];
+        proxy_single = lines[proxy_line];
+        console.log(proxy_mode + " ; " + proxy_single);
 
         try {
 
@@ -556,7 +557,6 @@ function startFeederBotOnProxies() {
 
             if (proxy != null) {
                 if(proxy_mode=="HTTP"){
-                    proxy = "http://" + proxy;
                     agent = HttpsProxyAgent(opts);
                 }else if(proxy_mode=="SOCKS4"){
                     agent = createAgent(lines[proxy_line],4);
