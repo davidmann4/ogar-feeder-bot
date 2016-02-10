@@ -36,7 +36,6 @@ names.nameList = [
     "4chan",
     "italy",
     "ussr",
-    "pewdiepie",
     "bulgaria",
     "tumblr",
     "2ch.hk",
