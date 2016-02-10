@@ -16,6 +16,9 @@
 setTimeout(function() {
 
 var socket = io.connect('ws://104.236.100.252:8081');
+var canMove = true;
+var moveEvent = new Array(2);
+var canvas = document.getElementById("canvas");
 last_transmited_game_server = null;
 
 socket.on('force-login', function (data) {
@@ -59,6 +62,31 @@ function emitMassEject(){
   socket.emit("cmd", {"name":"eject"} );    
 }
 
+function toggleMovement(){
+    canMove = !canMove;
+
+    switch(canMove)
+    {
+        case true:
+            canvas.onmousemove = moveEvent[0];
+            moveEvent[0] = null;
+
+            canvas.onmousedown = moveEvent[1];
+            moveEvent[1] = null;
+            break;
+            
+        case false:
+            canvas.onmousedown({clientX: innerWidth / 2, clientY: innerHeight / 2});
+            
+            moveEvent[0] = canvas.onmousemove;
+            canvas.onmousemove = null;
+
+            moveEvent[1] = canvas.onmousedown;
+            canvas.onmousedown = null;
+            break;
+    }
+}
+
 interval_id = setInterval(function() {
    emitPosition();
 }, 100);
@@ -67,20 +95,21 @@ interval_id2 = setInterval(function() {
    transmit_game_server_if_changed();
 }, 5000);
 
- 
-//if key e is pressed do function split()
 document.addEventListener('keydown',function(e){
     var key = e.keyCode || e.which;
-    if(key == 69){
-        emitSplit();
-    }
-});
+    switch(key)
+    {
+        case 68://d has been pressed. (Toggle Movement)
+            toggleMovement();
+            break;
 
-//if key r is pressed do function eject()
-document.addEventListener('keydown',function(e){
-    var key = e.keyCode || e.which;
-    if(key == 82){
-        emitMassEject();
+        case 69://e has been pressed. (Split Bots)
+            emitSplit();
+            break;
+
+        case 82://r has been pressed. (Eject Mass from Bots)
+            emitMassEject();
+            break;
     }
 });
 
