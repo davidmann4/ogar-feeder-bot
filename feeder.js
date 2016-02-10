@@ -2,6 +2,7 @@
 //This code is badly documented, please read basic.js in this folder if you don't understand this code
 var config = require('./config');
 var names = require('./names');
+var aliveBots = 0;
 
 var AgarioClient = require('agario-client'); //Use this in your scripts
 spawnCount = 0;
@@ -86,6 +87,10 @@ FeederBot.prototype = {
             if (config.verbosityLevel > 0) {
                 bot.log('Server Leaderboard: ' + name_array.join(' - '));
             }
+            aliveBots = aliveBots + 1;
+            if (config.verbosityLevel > 0) {
+                console.log('Amount of active bots: ' + aliveBots);
+            }
         });
 
         bot.client.on('somebodyAteSomething', function(eater_ball, eaten_ball) {
@@ -124,6 +129,12 @@ FeederBot.prototype = {
         bot.client.on('disconnect', function() {
             if (config.verbosityLevel > 0) {
                 bot.log('Disconnected from the server.');
+            }
+            if (aliveBots > 0) {
+                aliveBots = aliveBots - 1;
+            }
+            if (config.verbosityLevel > 0) {
+                console.log('Amount of active bots: ' + aliveBots);
             }
             if (spawnCount > 0)
             { spawnCount--; }
