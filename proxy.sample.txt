@@ -1,20 +1,16 @@
-# agario-feeder-bot uses http,socks4 or socks5 proxies
-# put your proxies into the correct section
-# each line will try to connect 5 clients
-# if you put in a line with NOPROXY, the server itself will be used for 5 clients
+# agario-feeder-bot uses http, socks4, and/or socks5 proxies.
+# Put your proxies into the correct section, do not remove the #HTTP, #SOCKS4, or #SOCKS5.
+# if you put in a line with NOPROXY, the server itself will be used for the bots.
 
 NOPROXY
-
 
 #HTTP
 11.222.333.444:8080
 12.222.333.445:8080
 
-
 #SOCKS4
 11.222.333.444:8080
 12.222.333.445:8080
-
 
 #SOCKS5
 11.222.333.444:8080
