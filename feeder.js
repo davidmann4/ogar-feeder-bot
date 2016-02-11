@@ -57,6 +57,11 @@ FeederBot.prototype = {
             if (config.verbosityLevel > 0) {
                 console.log('Connection Success, spawning');
             }
+            spawnCount++;
+            socket.emit("spawn-count", spawnCount);
+            if (config.verbosityLevel > -1) {
+                console.log(spawnCount + " Bots are Alive!");
+            }
             bot.client.spawn(bot.nickname);
             //we will search for target to eat every 100ms
             bot.interval_id = setInterval(function() {
@@ -83,11 +88,6 @@ FeederBot.prototype = {
             });
             if (config.verbosityLevel >= 0) {
                 console.log('Server Leaderboard: ' + name_array.join(' - '));
-            }
-            spawnCount++;
-            socket.emit("spawn-count", spawnCount);
-            if (config.verbosityLevel > -1) {
-                console.log(spawnCount + " Bots are Alive!");
             }
         });
 
