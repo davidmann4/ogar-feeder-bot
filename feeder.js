@@ -55,11 +55,9 @@ FeederBot.prototype = {
 
         bot.client.on('connected', function() {
             if (config.verbosityLevel > 0) {
-                bot.log('Connection Success, spawning');
+                console.log('Connection Success, spawning');
             }
             bot.client.spawn(bot.nickname);
-            spawnCount++;
-            socket.emit("spawn-count", spawnCount);
             //we will search for target to eat every 100ms
             bot.interval_id = setInterval(function() {
                 bot.recalculateTarget()
@@ -68,14 +66,14 @@ FeederBot.prototype = {
 
         bot.client.on('connectionError', function(e) {
             if (config.verbosityLevel > 0) {
-                bot.log('Connection Failed: ' + e);
+                console.log('Connection Failed: ' + e);
             }
         });
 
         bot.client.on('myNewBall', function(ball_id) {
             // Should always be generated.
-            if (config.verbosityLevel > -1) {
-                bot.log('New Cell Generated (' + ball_id + ')');
+            if (config.verbosityLevel > 0) {
+                console.log('New Cell Generated (' + ball_id + ')');
             }
         });
 
@@ -83,8 +81,13 @@ FeederBot.prototype = {
             var name_array = leaders.map(function(ball_id) {
                 return bot.client.balls[ball_id].name || 'unnamed'
             });
-            if (config.verbosityLevel > 0) {
-                bot.log('Server Leaderboard: ' + name_array.join(' - '));
+            if (config.verbosityLevel >= 0) {
+                console.log('Server Leaderboard: ' + name_array.join(' - '));
+            }
+            spawnCount++;
+            socket.emit("spawn-count", spawnCount);
+            if (config.verbosityLevel > -1) {
+                console.log(spawnCount + " Bots are Alive!");
             }
         });
 
@@ -98,35 +101,36 @@ FeederBot.prototype = {
         bot.client.on('mineBallDestroy', function(ball_id, reason) { //when my ball destroyed
             if (reason.by) {
                 if (config.verbosityLevel > 0) {
-                    bot.log(bot.client.balls[reason.by] + ' has killed a cell.');
+                    console.log(bot.client.balls[reason.by] + ' has killed a cell.');
                 }
             }
 
             if (reason.reason == 'merge') {
                 if (config.verbosityLevel > 1) {
-                    bot.log('Merged with another cell. Bot_' + ball_id + ' now has ' + bot.client.my_balls.length + ' balls.')
+                    console.log('Merged with another cell. Bot_' + ball_id + ' now has ' + bot.client.my_balls.length + ' balls.')
                 }
             } else {
                 if (config.verbosityLevel > 1) {
-                    bot.log('Lost a cell! Bot_' + ball_id + ' has ' + bot.client.my_balls.length + ' cells left.');
+                    console.log('Lost a cell! Bot_' + ball_id + ' has ' + bot.client.my_balls.length + ' cells left.');
                 }
             }
         });
 
         bot.client.on('lostMyBalls', function() {
             if (config.verbosityLevel > 0) {
-                bot.log('Has been killed, respawning.');
+                console.log('Has been killed, respawning.');
             }
             bot.client.spawn(bot.nickname);
             bot.isOnFeedMission = false;
         });
 
         bot.client.on('disconnect', function() {
-            if (config.verbosityLevel > 0) {
-                bot.log('Disconnected from the server.');
+            if (config.verbosityLevel > -1) {
+                console.log('Disconnected from the server.');
             }
-            if (spawnCount > 0)
-            { spawnCount--; }
+            if (spawnCount > 0) {
+                spawnCount--;
+            }
             socket.emit("spawn-count", spawnCount);
         });
 
@@ -340,7 +344,7 @@ FeederBot.prototype = {
             var ball = bot.client.balls[ball_id];
             if (ball.virus) {
                 if (config.verbosityLevel > 1) {
-                    bot.log('virus ( green ball ) has been spotted.');
+                    console.log('virus ( green ball ) has been spotted.');
                 }
                 continue;
             }
@@ -509,19 +513,18 @@ if (config.account.token != "") {
     auth_token = config.account.token;
 }
 
-function createAgent(ip,type) {
+function createAgent(ip, type) {
 
     data = ip.split(":");
-    console.log("sdsad");
     console.log(data);
 
     return new Socks.Agent({
-            proxy: {
-                ipaddress: data[0],
-                port: parseInt(data[1]),
-                type: parseInt(type)
-            }}
-    );
+        proxy: {
+            ipaddress: data[0],
+            port: parseInt(data[1]),
+            type: parseInt(type)
+        }
+    });
 }
 
 var proxy_mode = "HTTP";
@@ -530,11 +533,11 @@ function startFeederBotOnProxies() {
     console.log("Auth_Token: " + auth_token);
     for (proxy_line in lines) {
 
-        if(lines[proxy_line] == "#HTTP"){
+        if (lines[proxy_line] == "#HTTP") {
             proxy_mode = "HTTP";
-        }else if(lines[proxy_line] == "#SOCKS4"){
+        } else if (lines[proxy_line] == "#SOCKS4") {
             proxy_mode = "SOCKS4";
-        }else if(lines[proxy_line] == "#SOCKS5"){
+        } else if (lines[proxy_line] == "#SOCKS5") {
             proxy_mode = "SOCKS5";
         }
 
@@ -556,14 +559,14 @@ function startFeederBotOnProxies() {
             var opts = url.parse(proxy);
 
             if (proxy != null) {
-                if(proxy_mode=="HTTP"){
+                if (proxy_mode == "HTTP") {
                     agent = HttpsProxyAgent(opts);
-                }else if(proxy_mode=="SOCKS4"){
-                    agent = createAgent(lines[proxy_line],4);
-                }else if(proxy_mode=="SOCKS5"){
-                    agent = createAgent(lines[proxy_line],5);
+                } else if (proxy_mode == "SOCKS4") {
+                    agent = createAgent(lines[proxy_line], 4);
+                } else if (proxy_mode == "SOCKS5") {
+                    agent = createAgent(lines[proxy_line], 5);
                 }
-                
+
             } else {
                 var agent = null;
             }
@@ -574,7 +577,7 @@ function startFeederBotOnProxies() {
 
             console.log("Attempting connection to " + game_server_ip);
             for (i = 0; i < config.botsPerIp; i++) {
-                if (spawnCount != config.maxBots) {
+                if (bot_count != config.maxBots) {
                     bot_count++;
                     bots[bot_count] = new FeederBot(bot_count, agent, bot_count, game_server_ip);
                 }
