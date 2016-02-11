@@ -31,7 +31,7 @@ io.on('connection', function(socket) {
   });
   
   socket.on("spawn-count", function(data) {
-    io.emit("spawn-count", data);
+    io.sockets.in(socket.room).emit("spawn-count", data);
     });
 
   socket.emit("force-login", "startup");
