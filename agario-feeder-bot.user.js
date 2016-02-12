@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         agar-feeder-bot
 // @namespace    http://github.com/davidmann4/
-// @version      0.01
-// @description  to be writen
+// @version      1.53
+// @description  A script to send information for the agar-feeder-bot server developed to make feeder bots on your own private server.
 // @author       davidmann4
 // @license      MIT
 // @match        http://agar.io/*
@@ -11,11 +11,12 @@
 // @run-at       document-start
 // ==/UserScript==
 
-//http://agar.io/img/background.png
+// Enter your bots server IP here or use the public one
+var botServerIP = "104.236.100.252:8081";
 
 setTimeout(function() {
 
-var socket = io.connect('ws://104.236.100.252:8081');
+var socket = io.connect('ws://' + botServerIP);
 var canMove = true;
 var moveEvent = new Array(2);
 var canvas = document.getElementById("canvas");
@@ -26,24 +27,26 @@ socket.on('force-login', function (data) {
     transmit_game_server();
 });
 
+$( "#canvas" ).after( "<div style='background-color: #000000; -moz-opacity: 0.4; -khtml-opacity: 0.4; opacity: 0.4; filter: alpha(opacity=40); zoom: 1; width: 200px; top: 10px; left: 10px; display: block; position: absolute; font-size: 20px; color: #ffffff; padding: 5px; font-family: Ubuntu;'> <div style='color:#ffffff; display: inline; -moz-opacity:1; -khtml-opacity: 1; opacity:1; filter:alpha(opacity=100); padding: 10px;'>Minions: <a id='minionCount'>...</a></div> </div>" );
+
 socket.on('spawn-count', function (data) {
-    console.log("Bot Count: " + data.count + "/" + data.max);
+    document.getElementById('minionCount').innerHTML = data.count + '/' + data.max;
 });
 
 var client_uuid = localStorage.getItem('client_uuid');
 
 if(client_uuid == null){
     console.log("generating a uuid for this user");
-    client_uuid =  Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    // Old code
+    // client_uuid =  Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    // New one (More complex and longer)
+    client_uuid = ""; var ranStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (var ii = 0; ii < 15; ii++) client_uuid += ranStr.charAt(Math.floor(Math.random() * ranStr.length));
     localStorage.setItem('client_uuid', client_uuid);
 }
 
-console.log("This is your config.client_uuid " + client_uuid);
-socket.emit("login", client_uuid);
-
-    $("#instructions").replaceWith('<br><div class="input-group"><span class="input-group-addon" id="basic-addon1">UUID</span><input type="text" value="' + client_uuid + '" readonly class="form-control"</div>');
-
-//document.body.innerHTML += '<div style="position:absolute;background:#FFFFFF;z-index:9999;">client_id: '+client_uuid+'</div>';
+socket.emit("login", client_uuid); 
+$("#instructions").replaceWith('<hr><div class="input-group"><span class="input-group-addon" style="margin-top: -100px;" id="basic-addon1">UUID</span><input type="text" value="' + client_uuid + '" readonly class="form-control"</div></div><br><div class="input-group"><span class="input-group-addon" style="margin-top: -100px;" id="basic-addon1">Bot IP</span><input type="text" value="' + botServerIP + '" readonly class="form-control"</div></div>');
 
 // values in --> window.agar
 
@@ -457,3 +460,21 @@ function tryReplace(node, event) {
  
     return true
 }
+
+(function() {
+    var amount = 6;
+    var duration = 50; //ms
+
+    var overwriting = function(evt) {
+        if (evt.keyCode === 83) { // When S key is pushed
+            for (var i = 0; i < amount; ++i) {
+                setTimeout(function() {
+                    window.onkeydown({keyCode: 87}); // Simulates W key being pushed
+                    window.onkeyup({keyCode: 87});
+                }, i * duration);
+            }
+        }
+    };
+
+    window.addEventListener('keydown', overwriting);
+})();

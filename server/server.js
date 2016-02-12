@@ -5,12 +5,12 @@ var fs = require('fs');
 
 app.listen(config.serverPort);
 
-console.log("Starting server on port " + config.serverPort);
+console.log("-- Starting server on port " + config.serverPort + " --");
 
 io.on('connection', function(socket) {
 
   socket.on('login', function(data) {
-    console.log("User connected with id:" + data.uuid);
+    console.log("User connected with id: " + data.uuid);
     socket.room = data.uuid;
     socket.join(data.uuid);
 
