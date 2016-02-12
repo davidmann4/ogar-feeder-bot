@@ -45,6 +45,12 @@ FeederBot.prototype = {
         if (config.verbosityLevel > 0) {
             this.log('Connecting to: ' + server);
         }
+
+        if (spawnCount > config.maxBots) { 
+            this.log('ERROR: spawned to many bots - Increase config.maxBots for more bots.');
+            return; 
+        }
+
         this.server = server;
         this.client.connect(server);
         this.attachEvents();
@@ -125,8 +131,7 @@ FeederBot.prototype = {
             if (config.verbosityLevel > 0) {
                 bot.log('Disconnected from the server.');
             }
-            if (spawnCount > 0)
-            { spawnCount--; }
+            if (spawnCount > 0){ spawnCount--;}
             socket.emit("spawn-count", spawnCount + '/' + config.maxBots);
         });
 
@@ -519,8 +524,6 @@ if (config.account.token != "") {
 function createAgent(ip,type) {
 
     data = ip.split(":");
-    console.log("sdsad");
-    console.log(data);
 
     return new Socks.Agent({
             proxy: {
@@ -580,11 +583,9 @@ function startFeederBotOnProxies() {
             }
 
             console.log("Attempting connection to " + game_server_ip);
-            for (i = 0; i < config.botsPerIp; i++) {
-                if (spawnCount < config.maxBots) {
-                    bot_count++;
-                    bots[bot_count] = new FeederBot(bot_count, agent, bot_count, game_server_ip);
-                }
+            for (i = 0; i < config.botsPerIp; i++) {                
+                bot_count++;
+                bots[bot_count] = new FeederBot(bot_count, agent, bot_count, game_server_ip);                
             }
 
         } catch (e) {
