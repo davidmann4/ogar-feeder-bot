@@ -1,5 +1,17 @@
-//Example of multiple connections in one script
-//This code is badly documented, please read basic.js in this folder if you don't understand this code
+
+var fs = require('fs-extra');
+var path = require('path');
+
+if (!fs.existsSync('proxy.txt')) {
+    console.log("INFO: did not found proxy.txt - creating it.");
+    fs.copySync(path.resolve(__dirname,'./proxy.sample.txt'), 'proxy.txt');
+}
+
+if (!fs.existsSync('config.js')) {
+    console.log("INFO: did not found config.js - creating it.");
+    fs.copySync(path.resolve(__dirname,'./config.sample.js'), 'config.js');
+}
+
 var config = require('./config');
 var names = require('./names');
 
