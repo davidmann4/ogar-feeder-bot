@@ -23,7 +23,7 @@ config.botsPerIp = 1;
 config.onboardingTimer = 5000;
 
 // Maximum number of bots to load
-config.maxBots = "128";
+config.maxBots = 128;
 
 config.useRandomSkinName = true; // Set to true to use random name
 config.useStaticName = "AgarioFeederBot"; // If above is false, us this skin name
