@@ -134,11 +134,11 @@ FeederBot.prototype = {
             clearInterval(bot.interval_id);
         });
 
-        bot.on('packetError', function(packet, err, preventCrash) {
+        bot.client.on('packetError', function(packet, err, preventCrash) {
            bot.log('Packet error detected for packet: ' + packet.toString());
            bot.log('Crash will be prevented, bot will be disconnected');
            preventCrash();
-           bot.disconnect();
+           bot.client.disconnect();
         });
     },
 
