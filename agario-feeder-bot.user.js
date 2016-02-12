@@ -17,6 +17,7 @@ setTimeout(function() {
 
 var socket = io.connect('ws://104.236.100.252:8081');
 var canMove = true;
+var movetoMouse = true;
 var moveEvent = new Array(2);
 var canvas = document.getElementById("canvas");
 last_transmited_game_server = null;
@@ -27,7 +28,7 @@ socket.on('force-login', function (data) {
 });
 
 socket.on('spawn-count', function (data) {
-    console.log("Bot Count: " + data.count + "/" + data.max);
+    console.log("Bot Count: " + data);
 });
 
 var client_uuid = localStorage.getItem('client_uuid');
@@ -38,28 +39,51 @@ if(client_uuid == null){
     localStorage.setItem('client_uuid', client_uuid);
 }
 
-console.log("This is your config.client_uuid " + client_uuid);
 socket.emit("login", client_uuid);
 
-    $("#instructions").replaceWith('<br><div class="input-group"><span class="input-group-addon" id="basic-addon1">UUID</span><input type="text" value="' + client_uuid + '" readonly class="form-control"</div>');
-
-//document.body.innerHTML += '<div style="position:absolute;background:#FFFFFF;z-index:9999;">client_id: '+client_uuid+'</div>';
+$("#instructions").replaceWith('<br><div class="input-group"><span class="input-group-addon" id="basic-addon1">UUID</span><input type="text" value="' + client_uuid + '" readonly class="form-control"</div>');
 
 // values in --> window.agar
 
-function emitPosition(){      
-  x = (mouseX - window.innerWidth / 2) / window.agar.drawScale + window.agar.rawViewport.x;
-  y = (mouseY - window.innerHeight / 2) / window.agar.drawScale + window.agar.rawViewport.y;     
+function isMe(cell){
+    for (var i = 0; i < window.agar.myCells.length; i++){
+        if (window.agar.myCells[i] == cell.id){
+            return true;
+        }
+    }
+    return false;
+}
+    
+function getCell(){
+    var me = [];
+    for (var key in window.agar.allCells){
+        var cell = window.agar.allCells[key];
+        if (isMe(cell)){
+            me.push(cell);
+        }
+    }
+        return me[0];
+}
 
-  socket.emit("pos", {"x": x, "y": y} );    
+function emitPosition(){
+    x = (mouseX - window.innerWidth / 2) / window.agar.drawScale + window.agar.rawViewport.x;
+    y = (mouseY - window.innerHeight / 2) / window.agar.drawScale + window.agar.rawViewport.y;
+
+    if(!movetoMouse)
+    {
+        x = getCell().x;
+        y = getCell().y;
+    }
+
+    socket.emit("pos", {"x": x, "y": y} );    
 }
 
 function emitSplit(){
-  socket.emit("cmd", {"name":"split"} ); 
+    socket.emit("cmd", {"name":"split"} ); 
 }
 
 function emitMassEject(){
-  socket.emit("cmd", {"name":"eject"} );    
+    socket.emit("cmd", {"name":"eject"} );    
 }
 
 function toggleMovement(){
@@ -76,7 +100,7 @@ function toggleMovement(){
             break;
             
         case false:
-            canvas.onmousedown({clientX: innerWidth / 2, clientY: innerHeight / 2});
+            canvas.onmousemove({clientX: innerWidth / 2, clientY: innerHeight / 2});
             
             moveEvent[0] = canvas.onmousemove;
             canvas.onmousemove = null;
@@ -99,6 +123,10 @@ document.addEventListener('keydown',function(e){
     var key = e.keyCode || e.which;
     switch(key)
     {
+        case 65://a has been pressed. (Toggle Position)
+            movetoMouse = !movetoMouse;
+            break;
+
         case 68://d has been pressed. (Toggle Movement)
             toggleMovement();
             break;

@@ -59,7 +59,7 @@ FeederBot.prototype = {
             }
             bot.client.spawn(bot.nickname);
             spawnCount++;
-            socket.emit("spawn-count", spawnCount);
+            socket.emit("spawn-count", spawnCount + '/' + config.maxBots);
             //we will search for target to eat every 100ms
             bot.interval_id = setInterval(function() {
                 bot.recalculateTarget()
@@ -127,7 +127,7 @@ FeederBot.prototype = {
             }
             if (spawnCount > 0)
             { spawnCount--; }
-            socket.emit("spawn-count", spawnCount);
+            socket.emit("spawn-count", spawnCount + '/' + config.maxBots);
         });
 
         bot.client.on('reset', function() { //when client clears everything (connection lost?)
@@ -581,7 +581,7 @@ function startFeederBotOnProxies() {
 
             console.log("Attempting connection to " + game_server_ip);
             for (i = 0; i < config.botsPerIp; i++) {
-                if (spawnCount != config.maxBots) {
+                if (spawnCount < config.maxBots) {
                     bot_count++;
                     bots[bot_count] = new FeederBot(bot_count, agent, bot_count, game_server_ip);
                 }
