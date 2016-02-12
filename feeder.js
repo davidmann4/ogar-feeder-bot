@@ -540,11 +540,11 @@ function startFeederBotOnProxies() {
     console.log("Auth_Token: " + auth_token);
     for (proxy_line in lines) {
 
-        if(lines[proxy_line] == "#HTTP"){
+        if(lines[proxy_line].trim() == "#HTTP"){
             proxy_mode = "HTTP";
-        }else if(lines[proxy_line] == "#SOCKS4"){
+        }else if(lines[proxy_line].trim() == "#SOCKS4"){
             proxy_mode = "SOCKS4";
-        }else if(lines[proxy_line] == "#SOCKS5"){
+        }else if(lines[proxy_line].trim() == "#SOCKS5"){
             proxy_mode = "SOCKS5";
         }
 
