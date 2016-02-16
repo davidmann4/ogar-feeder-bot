@@ -23,7 +23,7 @@ var canvas = document.getElementById("canvas");
 last_transmited_game_server = null;
 
 socket.on('force-login', function (data) {
-    socket.emit("login", {"uuid":client_uuid, "type":"client", "dimensions", agar.dimensions});
+    socket.emit("login", {"uuid":client_uuid, "type":"client", "dimensions": agar.dimensions});
     transmit_game_server();
 });
 
