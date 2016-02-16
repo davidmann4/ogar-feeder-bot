@@ -84,13 +84,9 @@ FeederBot.prototype = {
         });
 
         bot.client.on('mapSizeLoad', function(min_x, min_y, max_x, max_y) {
-            bot.log('got my map-size: ' + min_x + ";" + min_y + ";" + max_x + ";" + max_y);
-
+            //bot.log('got my map-size: ' + min_x + ";" + min_y + ";" + max_x + ";" + max_y);
             bot.offset_x = min_x;
-            bot.offset_y = min_y;
-
-            bot.log('my offset to the client: ' + bot.offset_x + ";" + bot.offset_y);
-
+            bot.offset_y = min_y;            
         });
 
         bot.client.on('connectionError', function(e) {
@@ -342,16 +338,23 @@ FeederBot.prototype = {
             console.log(safeY)
         }
 
-        bot.client.moveToWithOffset(safeX, safeY);
+        bot.client.moveTo(safeX, safeY);
     },
 
-    moveToWithOffset: function(x, y) {
+    moveToPlayerPosWithOffset: function() {
         bot = this;
 
-        offset_x = valid_player_pos["dimension"][0] - bot.offset_x;
-        offset_y = valid_player_pos["dimension"][1] - bot.offset_y;
+        if(valid_player_pos==null){return;}
 
-        bot.client.moveTo(x - offset_x, y - offset_y);
+        if(valid_player_pos["dimensions"] == null){
+            console.log("!!UPDATE USERSCRIPT!!")
+            return;
+        }
+
+        offset_x = valid_player_pos["dimensions"][0] - bot.offset_x;
+        offset_y = valid_player_pos["dimensions"][1] - bot.offset_y;
+
+        bot.client.moveTo(valid_player_pos["x"] - offset_x, valid_player_pos["y"] - offset_y);
     },
 
     recalculateTarget: function() {
@@ -366,7 +369,7 @@ FeederBot.prototype = {
             if (config.enableSaveMoveTo) {
                 bot.safeMoveTo(valid_player_pos["x"], valid_player_pos["y"]);
             } else {
-                bot.moveToWithOffset(valid_player_pos["x"], valid_player_pos["y"]);
+                bot.moveToPlayerPosWithOffset();
             }
 
             if (bot.playerInRange(my_ball, valid_player_pos["x"], valid_player_pos["y"], valid_player_pos.size, 400)) {
@@ -421,10 +424,10 @@ FeederBot.prototype = {
 
         if (candidate_ball == null) {
             //console.log("normal move");
-            bot.moveToWithOffset(valid_player_pos["x"], valid_player_pos["y"]);
+            bot.moveToPlayerPosWithOffset();
         } else {
             //console.log("normal move");
-            bot.moveToWithOffset(candidate_ball.x, candidate_ball.y);
+            bot.client.moveTo(candidate_ball.x, candidate_ball.y);
         }
 
     }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ogar-feeder-bot
 // @namespace    http://github.com/davidmann4/
-// @version      0.01
+// @version      0.02
 // @description  to be writen
 // @author       davidmann4
 // @license      MIT
@@ -23,7 +23,7 @@ var canvas = document.getElementById("canvas");
 last_transmited_game_server = null;
 
 socket.on('force-login', function (data) {
-    socket.emit("login", {"uuid":client_uuid, "type":"client", "dimensions": agar.dimensions});
+    socket.emit("login", {"uuid":client_uuid, "type":"client"});
     transmit_game_server();
 });
 
@@ -75,7 +75,7 @@ function emitPosition(){
         y = getCell().y;
     }
 
-    socket.emit("pos", {"x": x, "y": y} );    
+    socket.emit("pos", {"x": x, "y": y, "dimensions": agar.dimensions} );    
 }
 
 function emitSplit(){
