@@ -14,8 +14,10 @@ io.on('connection', function(socket) {
     socket.room = data.uuid;
     socket.join(data.uuid);
 
-    if (data.type == "server") {
+    if (data.type == "server") {      
       io.sockets.in(socket.room).emit("force-login", "server-booted-up");
+    }else if(data.type == "client"){
+      io.sockets.in(socket.room).emit("client-dimension-update",  data.dimensions);
     }
 
   });

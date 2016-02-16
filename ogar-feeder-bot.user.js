@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         agar-feeder-bot
+// @name         ogar-feeder-bot
 // @namespace    http://github.com/davidmann4/
 // @version      0.01
 // @description  to be writen
@@ -23,7 +23,7 @@ var canvas = document.getElementById("canvas");
 last_transmited_game_server = null;
 
 socket.on('force-login', function (data) {
-    socket.emit("login", {"uuid":client_uuid, "type":"client"});
+    socket.emit("login", {"uuid":client_uuid, "type":"client", "dimensions", agar.dimensions});
     transmit_game_server();
 });
 

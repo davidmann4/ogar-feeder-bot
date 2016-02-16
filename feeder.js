@@ -36,7 +36,7 @@ function FeederBot(bot_id, agent, bot_number, server) {
     this.client.auth_token = auth_token;
     this.client.headers['user-agent'] = config.userAgent;
     this.isOnFeedMission = false;
-    this.onboard_client(server, bot_number)
+    this.onboard_client(server, bot_number);
 }
 
 FeederBot.prototype = {
@@ -82,6 +82,11 @@ FeederBot.prototype = {
             bot.interval_id = setInterval(function() {
                 bot.recalculateTarget()
             }, 100);
+        });
+
+        bot.client.on('mapSizeLoad', function(min_x, min_y, max_x, max_y) {
+            bot.log('got my map-size: ' + min_x + ";" + min_y + ";" + max_x + ";" + max_y);
+
         });
 
         bot.client.on('connectionError', function(e) {
@@ -446,6 +451,7 @@ var contains = function(needle) {
 
 var WebSocket = require('ws');
 var valid_player_pos = null;
+var player_dimension = null;
 var socket = require('socket.io-client')(config.feederServer);
 
 socket.on('pos', function(data) {
@@ -492,6 +498,10 @@ socket.on('force-login', function(data) {
         "uuid": config.client_uuid,
         "type": "server"
     });
+});
+
+socket.on('client-dimension-update', function(data) {
+    player_dimension = data;
 });
 
 fs = require('fs');
