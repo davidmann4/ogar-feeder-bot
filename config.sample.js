@@ -32,13 +32,6 @@ config.useStaticName = "AgarioFeederBot"; // If above is false, us this skin nam
 config.minimumMassBeforeFeed = 0;
 config.enableSaveMoveTo = false;
 
-config.useFacebookAuth = false; // Set to true for Facebook authentication
-config.account.token = ""; // Auth token which is only valid for 2 hours - better use cookies
-
-// You can also generate your own token through Facebook Data. (This will get overwritten if you use account.token)
-config.account.c_user = ""; // Cookie from "c_user" at http://facebook.com
-config.account.datr = "";// Cookie from "datr" at http://facebook.com
-config.account.xs = ""; // Cookie from "xs" at http://facebook.com
 
 // IGNORE THIS
 module.exports = config;

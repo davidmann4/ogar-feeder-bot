@@ -33,7 +33,6 @@ function FeederBot(bot_id, agent, bot_number, server) {
     this.client = new AgarioClient('Bot_' + this.bot_id); //creates new client
     this.client.debug = 0;
     this.client.agent = agent;
-    this.client.auth_token = auth_token;
     this.client.headers['user-agent'] = config.userAgent;
     this.isOnFeedMission = false;
     this.onboard_client(server, bot_number);
@@ -535,24 +534,6 @@ var fs = require('fs');
 var lines = fs.readFileSync(config.proxies).toString().split("\n");
 var url = require('url');
 var game_server_ip = null;
-var auth_token = null;
-
-if (config.useFacebookAuth) {
-    var account = new AgarioClient.Account();
-
-    account.c_user = config.account.c_user;
-    account.datr = config.account.datr;
-    account.xs = config.account.xs;
-
-    account.requestFBToken(function(token, info) {
-        auth_token = token;
-    });
-
-}
-
-if (config.account.token != "") {
-    auth_token = config.account.token;
-}
 
 function createAgent(ip,type) {
 
