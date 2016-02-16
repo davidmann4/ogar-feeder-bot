@@ -84,7 +84,7 @@ FeederBot.prototype = {
         });
 
         bot.client.on('mapSizeLoad', function(min_x, min_y, max_x, max_y) {
-            bot.log('got my map-size: ' + min_x + ";" + min_y + ";" + max_x + ";" + max_y);
+            //bot.log('got my map-size: ' + min_x + ";" + min_y + ";" + max_x + ";" + max_y);
             bot.offset_x = min_x;
             bot.offset_y = min_y;            
         });
@@ -354,7 +354,7 @@ FeederBot.prototype = {
         offset_x = valid_player_pos["dimensions"][0] - bot.offset_x;
         offset_y = valid_player_pos["dimensions"][1] - bot.offset_y;
 
-        console.log("offset move " + offset_x + ";" + offset_y);
+        //console.log("offset move " + offset_x + ";" + offset_y);
 
         bot.client.moveTo(valid_player_pos["x"] - offset_x, valid_player_pos["y"] - offset_y);
     },
