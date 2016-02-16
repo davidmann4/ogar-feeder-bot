@@ -87,6 +87,11 @@ FeederBot.prototype = {
         bot.client.on('mapSizeLoad', function(min_x, min_y, max_x, max_y) {
             bot.log('got my map-size: ' + min_x + ";" + min_y + ";" + max_x + ";" + max_y);
 
+            bot.offset_x = player_dimension[0] - min_x;
+            bot.offset_y = player_dimension[1] - min_y;
+
+            bot.log('my offset to the client: ' + bot.offset_x + ";" + bot.offset_y);
+
         });
 
         bot.client.on('connectionError', function(e) {
@@ -159,8 +164,8 @@ FeederBot.prototype = {
         bot.client.on('packetError', function(packet, err, preventCrash) {
            bot.log('Packet error detected for packet: ' + packet.toString());
            bot.log('Crash will be prevented, bot will be disconnected');
-           preventCrash();
-           bot.client.disconnect();
+           //preventCrash();
+           //bot.client.disconnect();
         });
     },
 
@@ -338,7 +343,12 @@ FeederBot.prototype = {
             console.log(safeY)
         }
 
-        bot.client.moveTo(safeX, safeY);
+        bot.client.moveToWithOffset(safeX, safeY);
+    },
+
+    moveToWithOffset: function(x, y) {
+        bot = this;
+        bot.client.moveTo(x - bot.offset_x, y -  bot.offset_y);
     },
 
     recalculateTarget: function() {
@@ -353,7 +363,7 @@ FeederBot.prototype = {
             if (config.enableSaveMoveTo) {
                 bot.safeMoveTo(valid_player_pos["x"], valid_player_pos["y"]);
             } else {
-                bot.client.moveTo(valid_player_pos["x"], valid_player_pos["y"]);
+                bot.moveToWithOffset(valid_player_pos["x"], valid_player_pos["y"]);
             }
 
             if (bot.playerInRange(my_ball, valid_player_pos["x"], valid_player_pos["y"], valid_player_pos.size, 400)) {
@@ -408,10 +418,10 @@ FeederBot.prototype = {
 
         if (candidate_ball == null) {
             //console.log("normal move");
-            bot.client.moveTo(valid_player_pos["x"], valid_player_pos["y"]);
+            bot.moveToWithOffset(valid_player_pos["x"], valid_player_pos["y"]);
         } else {
             //console.log("normal move");
-            bot.client.moveTo(candidate_ball.x, candidate_ball.y);
+            bot.moveToWithOffset(candidate_ball.x, candidate_ball.y);
         }
 
     }
@@ -501,6 +511,7 @@ socket.on('force-login', function(data) {
 });
 
 socket.on('client-dimension-update', function(data) {
+    console.log(data);
     player_dimension = data;
 });
 
