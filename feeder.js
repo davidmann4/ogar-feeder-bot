@@ -551,7 +551,7 @@ function createAgent(ip,type) {
 var proxy_mode = "HTTP";
 
 function startFeederBotOnProxies() {
-    console.log("Auth_Token: " + auth_token);
+
     for (proxy_line in lines) {
 
         if(lines[proxy_line].trim() == "#HTTP"){
