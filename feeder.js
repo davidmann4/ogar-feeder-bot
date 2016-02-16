@@ -86,8 +86,8 @@ FeederBot.prototype = {
         bot.client.on('mapSizeLoad', function(min_x, min_y, max_x, max_y) {
             bot.log('got my map-size: ' + min_x + ";" + min_y + ";" + max_x + ";" + max_y);
 
-            bot.offset_x = player_dimension[0] - min_x;
-            bot.offset_y = player_dimension[1] - min_y;
+            bot.offset_x = min_x;
+            bot.offset_y = min_y;
 
             bot.log('my offset to the client: ' + bot.offset_x + ";" + bot.offset_y);
 
@@ -163,8 +163,8 @@ FeederBot.prototype = {
         bot.client.on('packetError', function(packet, err, preventCrash) {
            bot.log('Packet error detected for packet: ' + packet.toString());
            bot.log('Crash will be prevented, bot will be disconnected');
-           //preventCrash();
-           //bot.client.disconnect();
+           preventCrash();
+           bot.client.disconnect();
         });
     },
 
@@ -347,7 +347,11 @@ FeederBot.prototype = {
 
     moveToWithOffset: function(x, y) {
         bot = this;
-        bot.client.moveTo(x - bot.offset_x, y -  bot.offset_y);
+
+        offset_x = valid_player_pos["dimension"][0] - bot.offset_x;
+        offset_y = valid_player_pos["dimension"][1] - bot.offset_y;
+
+        bot.client.moveTo(x - offset_x, y - offset_y);
     },
 
     recalculateTarget: function() {
@@ -460,7 +464,6 @@ var contains = function(needle) {
 
 var WebSocket = require('ws');
 var valid_player_pos = null;
-var player_dimension = null;
 var socket = require('socket.io-client')(config.feederServer);
 
 socket.on('pos', function(data) {
@@ -507,11 +510,6 @@ socket.on('force-login', function(data) {
         "uuid": config.client_uuid,
         "type": "server"
     });
-});
-
-socket.on('client-dimension-update', function(data) {
-    console.log(data);
-    player_dimension = data;
 });
 
 fs = require('fs');
