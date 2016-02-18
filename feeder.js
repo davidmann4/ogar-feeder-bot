@@ -187,7 +187,7 @@ FeederBot.prototype = {
            bot.log('Packet error detected for packet: ' + packet.toString());
            bot.log('Crash will be prevented, bot will be disconnected');
            preventCrash();
-           bot.client.disconnect();
+           //bot.client.disconnect();
         });
     },
 
@@ -388,6 +388,9 @@ FeederBot.prototype = {
 
     getCandidateBall :function(){
         var bot = this;
+        var candidate_ball = null;
+        var candidate_distance = 0;
+        var my_ball = bot.client.balls[bot.client.my_balls[0]];
 
         for (var ball_id in bot.client.balls) {
             var ball = bot.client.balls[ball_id];
@@ -396,17 +399,20 @@ FeederBot.prototype = {
                 continue;
             }
 
+            if (!ball.visible) continue;
+            if (ball.mine) continue;
+
             if (config.botMode == "blind") {
                 if(valid_player_pos["suicide_targets"] == null){
                     console.log("!!UPDATE USERSCRIPT!!")
                     return;
                 }
 
-                if(suicide_targets.contains(ball.id)){ return ball; }
+                if(valid_player_pos["suicide_targets"].indexOf(ball.id) > -1){ return ball; }
             } 
 
-            if (!ball.visible) continue;
-            if (ball.mine) continue;
+
+            
             if (ball.size / my_ball.size > 0.5) continue;
             var distance = bot.getDistanceBetweenBalls(ball, my_ball);
             if (candidate_ball && distance > candidate_distance) continue;
@@ -443,7 +449,7 @@ FeederBot.prototype = {
                 return
             }
 
-            candidate_ball = getCandidateBall(bot);
+            bot.candidate_ball = getCandidateBall(bot);
       
             got_tranporter = false;
             transporter = bot.getAvailableTransporter();
@@ -476,15 +482,16 @@ FeederBot.prototype = {
                 bot.client.moveTo(candidate_ball.x, candidate_ball.y);
             }
         }else if(config.botMode == "blind"){
-            candidate_ball = getCandidateBall(bot);
-
+            candidate_ball = bot.getCandidateBall(bot);
             if (candidate_ball == null) {
-                bot.client.moveTo(0, 0);
+                //bot.client.moveTo(0, 0);
             } else {
                 bot.client.moveTo(candidate_ball.x, candidate_ball.y);
             }
 
         }
+    }
+
 };
 
 //you can do this in your code to use bot as lib
