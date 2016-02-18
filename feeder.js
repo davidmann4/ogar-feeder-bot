@@ -449,7 +449,7 @@ FeederBot.prototype = {
                 return
             }
 
-            bot.candidate_ball = getCandidateBall(bot);
+            bot.candidate_ball = bot.getCandidateBall(bot);
       
             got_tranporter = false;
             transporter = bot.getAvailableTransporter();
