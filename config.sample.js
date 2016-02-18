@@ -28,6 +28,11 @@ config.maxBots = 128;
 config.useRandomSkinName = true; // Set to true to use random name
 config.useStaticName = "AgarioFeederBot"; // If above is false, us this skin name
 
+// The bot can have different AI modes:
+// * default 	Bot will follow your mouse and listen to SPlit and eject commands
+// * blind		Bot will just know your ball id and will try to find you and run into you
+config.botMode = "default";
+
 // Edit this value so bots collect mass before coming towards the player
 config.minimumMassBeforeFeed = 0;
 config.enableSaveMoveTo = false;

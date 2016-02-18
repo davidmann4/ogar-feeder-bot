@@ -386,38 +386,25 @@ FeederBot.prototype = {
         bot.client.moveTo(valid_player_pos["x"] - offset_x, valid_player_pos["y"] - offset_y);
     },
 
-    recalculateTarget: function() {
+    getCandidateBall :function(){
         var bot = this;
-        var candidate_ball = null;
-        var candidate_distance = 0;
-        var my_ball = bot.client.balls[bot.client.my_balls[0]];
-        if (!my_ball) return;
-
-        if (valid_player_pos != null && bot.isOnFeedMission == true) {
-
-            if (config.enableSaveMoveTo) {
-                bot.safeMoveTo(valid_player_pos["x"], valid_player_pos["y"]);
-            } else {
-                bot.moveToPlayerPosWithOffset();
-            }
-
-            if (bot.playerInRange(my_ball, valid_player_pos["x"], valid_player_pos["y"], valid_player_pos.size, 400)) {
-                if (bot.canSplitFeedPlayer(my_ball.mass, valid_player_pos.size)) {
-                    bot.client.split();
-                }
-            }
-
-            return
-        }
 
         for (var ball_id in bot.client.balls) {
             var ball = bot.client.balls[ball_id];
             if (ball.virus) {
-                if (config.verbosityLevel > 1) {
-                    bot.log('virus ( green ball ) has been spotted.');
-                }
+                if (config.verbosityLevel > 1) { bot.log('virus ( green ball ) has been spotted.');}
                 continue;
             }
+
+            if (config.botMode == "blind") {
+                if(valid_player_pos["suicide_targets"] == null){
+                    console.log("!!UPDATE USERSCRIPT!!")
+                    return;
+                }
+
+                if(suicide_targets.contains(ball.id)){ return ball; }
+            } 
+
             if (!ball.visible) continue;
             if (ball.mine) continue;
             if (ball.size / my_ball.size > 0.5) continue;
@@ -427,39 +414,77 @@ FeederBot.prototype = {
             candidate_ball = ball;
             candidate_distance = bot.getDistanceBetweenBalls(ball, my_ball);
         }
+        return candidate_ball;
+    },
 
-        got_tranporter = false;
-        transporter = bot.getAvailableTransporter();
-        if (transporter != null) {
-            candidate_ball = transporter;
-            got_tranporter = true;
-        }
+    recalculateTarget: function() {
+        var bot = this;
+        var candidate_ball = null;
+        var candidate_distance = 0;
+        var my_ball = bot.client.balls[bot.client.my_balls[0]];
+        if (!my_ball) return;
 
-        if (valid_player_pos != null && my_ball.mass > config.minimumMassBeforeFeed) {
-            bot.isOnFeedMission = true;
-            return;
-        }
+        if(config.botMode == "default"){ 
 
-        if (valid_player_pos != null && bot.playerInRange(my_ball, valid_player_pos["x"], valid_player_pos["y"], valid_player_pos.size, 1000)) {
+            if (valid_player_pos != null && bot.isOnFeedMission == true) {
 
-            if (!got_tranporter ||
-                bot.getDistanceBetweenBalls(candidate_ball, my_ball) >
-                bot.getDistanceBetweenBallAndPosition(my_ball, valid_player_pos["x"], valid_player_pos["y"])
-            ) {
+                if (config.enableSaveMoveTo) {
+                    bot.safeMoveTo(valid_player_pos["x"], valid_player_pos["y"]);
+                } else {
+                    bot.moveToPlayerPosWithOffset();
+                }
+
+                if (bot.playerInRange(my_ball, valid_player_pos["x"], valid_player_pos["y"], valid_player_pos.size, 400)) {
+                    if (bot.canSplitFeedPlayer(my_ball.mass, valid_player_pos.size)) {
+                        bot.client.split();
+                    }
+                }
+
+                return
+            }
+
+            candidate_ball = getCandidateBall(bot);
+      
+            got_tranporter = false;
+            transporter = bot.getAvailableTransporter();
+            if (transporter != null) {
+                candidate_ball = transporter;
+                got_tranporter = true;
+            }
+
+            if (valid_player_pos != null && my_ball.mass > config.minimumMassBeforeFeed) {
                 bot.isOnFeedMission = true;
                 return;
             }
-        }
 
-        if (candidate_ball == null) {
-            //console.log("normal move");
-            bot.moveToPlayerPosWithOffset();
-        } else {
-            //console.log("normal move");
-            bot.client.moveTo(candidate_ball.x, candidate_ball.y);
-        }
+            if (valid_player_pos != null && bot.playerInRange(my_ball, valid_player_pos["x"], valid_player_pos["y"], valid_player_pos.size, 1000)) {
 
-    }
+                if (!got_tranporter ||
+                    bot.getDistanceBetweenBalls(candidate_ball, my_ball) >
+                    bot.getDistanceBetweenBallAndPosition(my_ball, valid_player_pos["x"], valid_player_pos["y"])
+                ) {
+                    bot.isOnFeedMission = true;
+                    return;
+                }
+            }
+
+            if (candidate_ball == null) {
+                //console.log("normal move");
+                bot.moveToPlayerPosWithOffset();
+            } else {
+                //console.log("normal move");
+                bot.client.moveTo(candidate_ball.x, candidate_ball.y);
+            }
+        }else if(config.botMode == "blind"){
+            candidate_ball = getCandidateBall(bot);
+
+            if (candidate_ball == null) {
+                bot.client.moveTo(0, 0);
+            } else {
+                bot.client.moveTo(candidate_ball.x, candidate_ball.y);
+            }
+
+        }
 };
 
 //you can do this in your code to use bot as lib
@@ -496,6 +521,7 @@ var contains = function(needle) {
 
 var WebSocket = require('ws');
 var valid_player_pos = null;
+var suicide_targets = null;
 var socket = require('socket.io-client')(config.feederServer);
 
 socket.on('pos', function(data) {
