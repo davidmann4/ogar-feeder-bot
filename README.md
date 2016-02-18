@@ -16,17 +16,17 @@ If you use this bot make sure to star the repo!
 **Windows**
 ----------------------
 
-* Download this repo by pressing Download ZIP
-* Extract to any folder... ex. C:\Ogar-Bots
-* Open Install Dependencies (Windows).bat and follow the instructions
-* Install this extension: ([Chrome] (https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo), [Firefox] (https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/))
-* Install the file "agario-feeder-bot.user.js" in Chrome/Firefox with the extension that you installed in step 4
-* Copy config.sample.js to config.js:
+* **1.** Download this repo by pressing Download ZIP
+* **2.** Extract to any folder... ex. C:\Ogar-Bots
+* **3.** Open Install Dependencies (Windows).bat and follow the instructions
+* **4.** Install this extension: ([Chrome] (https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo), [Firefox] (https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/))
+* **5.** Install the file "agario-feeder-bot.user.js" in Chrome/Firefox with the extension that you installed in step 4
+* **6.** Copy config.sample.js to config.js:
   * Now in config.js, you must assign the UUID to the one that the userscript generated for you
-* Copy proxy.sample.txt to proxy.txt and paste you proxies under correct section... (Update them everyday... you can get them [here](http://vip-socks24.blogspot.com/?m=1) for free)
+* **7.** Copy proxy.sample.txt to proxy.txt and paste you proxies under correct section... (Update them everyday... you can get them [here](http://vip-socks24.blogspot.com/?m=1) for free)
   * You need to use proxies to connect multiple bots, the usual max limit for one IP is 5 clients/bots
-* Launch Chrome/Firefox and go to Agar.io to start using your bots. Enjoy :)
-* If you don't understand these "simple" instructions use Google, if you still don't get it, open an issue...
+* **8.** Launch Chrome/Firefox and go to Agar.io to start using your bots. Enjoy :)
+* **9.** If you don't understand these "simple" instructions use Google, if you still don't get it, open an issue...
 
 ----------------------
 
@@ -34,16 +34,16 @@ If you use this bot make sure to star the repo!
 **Other OS**
 ----------------------
 
-* git clone this repo
-* cd to the repo e.g. (cd agario-feeder-bot/)
-* Install this extension: ([Chrome] (https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo), [Firefox] (https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/))
-* Install the file "agario-feeder-bot.user.js" in Chrome/Firefox with the extension that you installed in step 4
-* Copy config.sample.js to config.js:
+* **1.** git clone this repo
+* **2.** cd to the repo e.g. (cd agario-feeder-bot/)
+* **3.** Install this extension: ([Chrome] (https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo), [Firefox] (https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/))
+* **4.** Install the file "agario-feeder-bot.user.js" in Chrome/Firefox with the extension that you installed in step 4
+* **5.** Copy config.sample.js to config.js:
   * Now in config.js, you must assign the UUID to the one that the userscript generated for you
-* Copy proxy.sample.txt to proxy.txt and paste you proxies under correct section... (Update them everyday... you can get them [here](http://vip-socks24.blogspot.com/?m=1) for free)
+* **6.** Copy proxy.sample.txt to proxy.txt and paste you proxies under correct section... (Update them everyday... you can get them [here](http://vip-socks24.blogspot.com/?m=1) for free)
   * You need to use proxies to connect multiple bots, the usual max limit for one IP is 5 clients/bots
 
-* Run these commands:
+* **7.** Run these commands in console:
 
 ```
 npm install
@@ -66,6 +66,6 @@ node feeder.js
 * Favourite this repo
 
 
-Disclaimer: 
+**Disclaimer:**
 Botting is against the TOS - so please only use it on your own Ogar server: https://github.com/OgarProject/Ogar
 These "BOTS" are only for educational purposes... :)
