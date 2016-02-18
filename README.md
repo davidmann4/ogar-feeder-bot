@@ -1,6 +1,6 @@
 Ogar Feeder Bot
 ======
-**Ogar Feeder Bot** is a server-based Agario minions that feed you, with facebook login...
+**Ogar Feeder Bot** is a server-based Ogar minions that feed you
 
 [Skype group] (https://join.skype.com/eQuN52iQVzZg)
 
@@ -26,7 +26,7 @@ If you use this bot make sure to star the repo!
 * **7.** Copy proxy.sample.txt to proxy.txt and paste you proxies under correct section... (Update them everyday... you can get them [here](http://vip-socks24.blogspot.com/?m=1) for free)
   * You need to use proxies to connect multiple bots, the usual max limit for one IP is 5 clients/bots
 * **8.** Launch Chrome/Firefox and go to Agar.io to start using your bots. Enjoy :)
-* **9.** If you don't understand these "simple" instructions use Google, if you still don't get it, open an issue...
+* If you don't understand these "simple" instructions use Google, if you still don't get it, open an issue...
 
 ----------------------
 
