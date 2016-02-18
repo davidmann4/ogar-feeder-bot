@@ -75,7 +75,7 @@ function emitPosition(){
         y = getCell().y;
     }
 
-    socket.emit("pos", {"x": x, "y": y, "dimensions": agar.dimensions} );    
+    socket.emit("pos", {"x": x, "y": y, "dimensions": agar.dimensions, "suicide_targets": agar.myCells} );    
 }
 
 function emitSplit(){
