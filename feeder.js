@@ -45,6 +45,14 @@ FeederBot.prototype = {
         }
     },
 
+    reset_map_data: function(){
+        var bot = this;
+        bot.map_min_x = null;
+        bot.map_min_y = null;
+        bot.map_max_x = null;
+        bot.map_max_y = null;
+    },
+
     onboard_client: function(server, bot_number) {
         var bot = this;
         setTimeout(function() {
@@ -71,6 +79,7 @@ FeederBot.prototype = {
         var bot = this;
 
         bot.client.on('connected', function() {
+            bot.reset_map_data();
             if (config.verbosityLevel > 0) {
                 bot.log('Connection Success, spawning');
             }
@@ -85,8 +94,25 @@ FeederBot.prototype = {
 
         bot.client.on('mapSizeLoad', function(min_x, min_y, max_x, max_y) {
             //bot.log('got my map-size: ' + min_x + ";" + min_y + ";" + max_x + ";" + max_y);
-            bot.offset_x = min_x;
-            bot.offset_y = min_y;            
+
+            if(bot.map_min_x == null){bot.map_min_x=min_x;}
+            if(bot.map_min_y == null){bot.map_min_y=min_y;}
+            if(bot.map_max_x == null){bot.map_max_x=max_x;}
+            if(bot.map_max_y == null){bot.map_max_y=max_y;}
+
+            if(bot.map_min_x > min_x){bot.map_min_x=min_x;}
+            if(bot.map_min_y > min_y){bot.map_min_y=min_y;}
+            if(bot.map_max_x < max_x){bot.map_max_x=max_x;}
+            if(bot.map_max_y < max_y){bot.map_max_y=max_y;}
+
+            calculated_offset_x = bot.map_min_x;
+            calculated_offset_y = bot.map_min_y;
+
+            if(calculated_offset_x-map_max_x < calculated_offset_x){calculated_offset_x = calculated_offset_x-map_max_x; }
+            if(calculated_offset_y-map_max_y < calculated_offset_x){calculated_offset_y = calculated_offset_y-map_max_y; }
+
+            bot.offset_x = calculated_offset_x;
+            bot.offset_y = calculated_offset_y;            
         });
 
         bot.client.on('connectionError', function(e) {
@@ -140,6 +166,7 @@ FeederBot.prototype = {
             if (config.verbosityLevel > 0) {
                 bot.log('Has been killed, respawning.');
             }
+            bot.reset_map_data();
             bot.client.spawn(bot.nickname);
             bot.isOnFeedMission = false;
         });
