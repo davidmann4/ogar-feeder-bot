@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         agar-feeder-bot
+// @name         ogar-feeder-bot
 // @namespace    http://github.com/davidmann4/
-// @version      0.01
+// @version      0.02
 // @description  to be writen
 // @author       davidmann4
 // @license      MIT
@@ -75,7 +75,7 @@ function emitPosition(){
         y = getCell().y;
     }
 
-    socket.emit("pos", {"x": x, "y": y} );    
+    socket.emit("pos", {"x": x, "y": y, "dimensions": agar.dimensions, "suicide_targets": agar.myCells} );    
 }
 
 function emitSplit(){

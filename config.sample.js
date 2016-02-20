@@ -28,17 +28,15 @@ config.maxBots = 128;
 config.useRandomSkinName = true; // Set to true to use random name
 config.useStaticName = "AgarioFeederBot"; // If above is false, us this skin name
 
+// The bot can have different AI modes:
+// * default 	Bot will follow your mouse and listen to SPlit and eject commands
+// * blind		Bot will just know your ball id and will try to find you and run into you
+config.botMode = "default";
+
 // Edit this value so bots collect mass before coming towards the player
 config.minimumMassBeforeFeed = 0;
 config.enableSaveMoveTo = false;
 
-config.useFacebookAuth = false; // Set to true for Facebook authentication
-config.account.token = ""; // Auth token which is only valid for 2 hours - better use cookies
-
-// You can also generate your own token through Facebook Data. (This will get overwritten if you use account.token)
-config.account.c_user = ""; // Cookie from "c_user" at http://facebook.com
-config.account.datr = "";// Cookie from "datr" at http://facebook.com
-config.account.xs = ""; // Cookie from "xs" at http://facebook.com
 
 // IGNORE THIS
 module.exports = config;
