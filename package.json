@@ -1,7 +1,7 @@
 {
   "name": "agario-feeder-bot",
-  "version": "1.0.0",
-  "description": "A Bot for agar.io which follows your mouse.",
+  "version": "1.2.0",
+  "description": "A Bot for Ogar which follows your mouse.",
   "main": "feeder.js",
   "dependencies": {
     "agario-client": "^1.2.4",
