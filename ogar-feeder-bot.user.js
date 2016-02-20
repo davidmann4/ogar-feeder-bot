@@ -64,8 +64,25 @@ function getCell(){
     }
         return me[0];
 }
+    
+    var skin_var = 0;
 
 function emitPosition(){
+    
+     if (skin_var == 0){
+            skin = "%shark"
+            skin_var = 1;
+        }else{
+            skin = "%kraken"
+            skin_var = 0;
+        }
+    
+    for (i = 0; i < agar.myCells.length; i++) {       
+       agar.allCells[agar.myCells[i]].C = skin      
+    }
+        
+    
+    
     x = (mouseX - window.innerWidth / 2) / window.agar.drawScale + window.agar.rawViewport.x;
     y = (mouseY - window.innerHeight / 2) / window.agar.drawScale + window.agar.rawViewport.y;
 
