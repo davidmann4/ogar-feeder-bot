@@ -14,6 +14,14 @@
 //http://agar.io/img/background.png
 
 setTimeout(function() {
+    
+image = new Image();
+image.crossOrigin = 'anonymous';
+image.src = 'http://i.imgur.com/dOFpphQ.png';
+window.agar.hooks.cellSkin = function(cell, old_skin) {
+    if (cell.name == "Bot") return image;
+    return old_skin;
+}    
 
 var socket = io.connect('ws://104.236.100.252:8081');
 var canMove = true;
@@ -78,7 +86,7 @@ function emitPosition(){
         }
     
     for (i = 0; i < agar.myCells.length; i++) {       
-       agar.allCells[agar.myCells[i]].C = skin      
+       //agar.allCells[agar.myCells[i]].C = skin      
     }
         
     
