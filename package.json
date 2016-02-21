@@ -1,16 +1,16 @@
 {
-  "name": "agario-feeder-bot",
-  "version": "1.0.0",
-  "description": "A Bot for agar.io which follows your mouse.",
+  "name": "ogar-feeder-bot",
+  "version": "1.2.0",
+  "description": "Bots for Ogar which follows your mouse.",
   "main": "feeder.js",
   "dependencies": {
-    "agario-client": "^1.2.4",
-    "https-proxy-agent": "^1.0.0",
-    "ws": "^1.0.1",
-    "socket.io": "^1.4.4",
-    "socket.io-client":"1.4.4",
-    "socks": "1.1.8",
-    "fs-extra": "0.26.5"
+    "agario-client": "latest",
+    "https-proxy-agent": "latest",
+    "ws": "latest",
+    "socket.io": "latest",
+    "socket.io-client":"latest",
+    "socks": "latest",
+    "fs-extra": "latest"
   },
   "devDependencies": {},
   "scripts": {
@@ -18,17 +18,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/davidmann4/agario-feeder-bot.git"
+    "url": "git+https://github.com/hassanila97/ogar-feeder-bot.git"
   },
   "keywords": [
     "agario",
     "feeder",
     "bot"
   ],
-  "author": "David Mann",
+  "author": "David Mann & Hassan",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/davidmann4/agario-feeder-bot/issues"
+    "url": "https://github.com/hassanila97/ogar-feeder-bot/issues"
   },
-  "homepage": "https://github.com/davidmann4/agario-feeder-bot#readme"
+  "homepage": "https://github.com/hassanila97/ogar-feeder-bot#readme"
 }
