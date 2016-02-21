@@ -17,7 +17,7 @@ If you use this bot make sure to star the repo!
 **Windows**
 ----------------------
 
-* **1.** Download NodeJs [32 bit] (https://nodejs.org/dist/v5.6.0/node-v5.6.0-x86.msi) [64 bit] (https://nodejs.org/dist/v5.6.0/node-v5.6.0-x64.msi)
+* **1.** Download NodeJs ([32 bit]) (https://nodejs.org/dist/v5.6.0/node-v5.6.0-x86.msi)  -----  ([64 bit]) (https://nodejs.org/dist/v5.6.0/node-v5.6.0-x64.msi)
 * **2.** Download this repo by pressing Download ZIP
 * **3.** Extract to any folder... ex. C:\Ogar-Bots
 * **4.** Open Install Dependencies (Windows).bat and follow the instructions
@@ -37,8 +37,7 @@ If you use this bot make sure to star the repo!
 **Other OS**
 ----------------------
 
-Install [NodeJs] (https://nodejs.org/en/download/package-manager/)
-Install [Git] (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+Install [NodeJs] (https://nodejs.org/en/download/package-manager/) and [Git] (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 * **1.** git clone this repo
 * **2.** cd to the repo e.g. (cd agario-feeder-bot/)
