@@ -108,8 +108,8 @@ FeederBot.prototype = {
             calculated_offset_x = bot.map_min_x;
             calculated_offset_y = bot.map_min_y;
 
-            if(calculated_offset_x-bot.map_max_x < calculated_offset_x){calculated_offset_x = calculated_offset_x-bot.map_max_x; }
-            if(calculated_offset_y-bot.map_max_y < calculated_offset_x){calculated_offset_y = calculated_offset_y-bot.map_max_y; }
+            //if(calculated_offset_x-bot.map_max_x < calculated_offset_x){calculated_offset_x = calculated_offset_x-bot.map_max_x; }
+            //if(calculated_offset_y-bot.map_max_y < calculated_offset_x){calculated_offset_y = calculated_offset_y-bot.map_max_y; }
 
             bot.offset_x = calculated_offset_x;
             bot.offset_y = calculated_offset_y;            
