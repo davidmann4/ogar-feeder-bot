@@ -14,6 +14,14 @@
 //http://agar.io/img/background.png
 
 setTimeout(function() {
+    
+image = new Image();
+image.crossOrigin = 'anonymous';
+image.src = 'http://i.imgur.com/dOFpphQ.png';
+window.agar.hooks.cellSkin = function(cell, old_skin) {
+    if (cell.name == "Bot") return image;
+    return old_skin;
+}    
 
     image = new Image();
     image.crossOrigin = 'anonymous';
@@ -84,6 +92,7 @@ setTimeout(function() {
             skin = "%kraken"
             skin_var = 0;
         }
+<<<<<<< HEAD
 
         for (i = 0; i < agar.myCells.length; i++) {
             //agar.allCells[agar.myCells[i]].C = skin
@@ -101,6 +110,11 @@ setTimeout(function() {
         }
 
         socket.emit("pos", {"x": x, "y": y, "dimensions": agar.dimensions, "suicide_targets": agar.myCells} );
+=======
+    
+    for (i = 0; i < agar.myCells.length; i++) {       
+       //agar.allCells[agar.myCells[i]].C = skin      
+>>>>>>> refs/remotes/davidmann4/master
     }
 
     function emitSplit(){
