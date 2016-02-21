@@ -320,8 +320,8 @@ var allRules = [
                     
  
           m.replace("hook:cellColor",
-                    /(\w+=)this\.color;/,
-                    "$1 ($h && $h(this, this.color) || this.color);")
+                    /(\w+=)this\.color,/,
++                    "$1 ($h && $h(this, this.color) || this.color),")
  
           m.replace("var:drawGrid",
                     /(\w+)\.globalAlpha=(\.2\*\w+);/,
