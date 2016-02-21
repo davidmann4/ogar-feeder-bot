@@ -7,7 +7,7 @@ config.account = {};
 config.verbosityLevel = 1;
 
 // Useragent the bot will use
-config.userAgent = 'agario-feeder-bot';
+config.userAgent = 'Chrome';
 
 // the feederServer connects your node script with your browser (mouse coordinates & commands)
 // you can use the public server or run your own node server/server.js
@@ -19,14 +19,14 @@ config.client_uuid = "YOUR_UUID"; // after you install the userscript press F12 
 
 // Location of your proxy files with HTTP proxies (Sock proxies not supported yet!)
 config.proxies = "proxy.txt";
-config.botsPerIp = 1;
+config.botsPerIp = 3;
 config.onboardingTimer = 5000;
 
 // Maximum number of bots to load
 config.maxBots = 128;
 
-config.useRandomSkinName = true; // Set to true to use random name
-config.useStaticName = "AgarioFeederBot"; // If above is false, us this skin name
+config.useRandomSkinName = false; // Set to true to use random name
+config.useStaticName = "BOT"; // If above is false, us this skin name
 
 // The bot can have different AI modes:
 // * default 	Bot will follow your mouse and listen to SPlit and eject commands
