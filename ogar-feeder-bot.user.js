@@ -35,8 +35,10 @@ socket.on('force-login', function (data) {
     transmit_game_server();
 });
 
+$( "#canvas" ).after( "<div style='background-color: #000000; -moz-opacity: 0.4; -khtml-opacity: 0.4; opacity: 0.4; filter: alpha(opacity=40); zoom: 1; width: 205px; top: 10px; left: 10px; display: block; position: absolute; text-align: center; font-size: 20px; color: #ffffff; padding: 5px; font-family: Ubuntu;'> <div style='color:#ffffff; display: inline; -moz-opacity:1; -khtml-opacity: 1; opacity:1; filter:alpha(opacity=100); padding: 10px;'>Minions: <a id='minionCount' >Offline</a> </div>" );
+
 socket.on('spawn-count', function (data) {
-    console.log("Bot Count: " + data);
+    document.getElementById('minionCount').innerHTML = data;
 });
 
 var client_uuid = localStorage.getItem('client_uuid');
@@ -320,8 +322,8 @@ var allRules = [
                     
  
           m.replace("hook:cellColor",
-                    /(\w+=)this\.color;/,
-                    "$1 ($h && $h(this, this.color) || this.color);")
+                    /(\w+=)this\.color,/,
++                    "$1 ($h && $h(this, this.color) || this.color),")
  
           m.replace("var:drawGrid",
                     /(\w+)\.globalAlpha=(\.2\*\w+);/,
