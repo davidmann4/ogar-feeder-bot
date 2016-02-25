@@ -35,10 +35,8 @@ socket.on('force-login', function (data) {
     transmit_game_server();
 });
 
-$( "#canvas" ).after( "<div style='background-color: #000000; -moz-opacity: 0.4; -khtml-opacity: 0.4; opacity: 0.4; filter: alpha(opacity=40); zoom: 1; width: 205px; top: 10px; left: 10px; display: block; position: absolute; text-align: center; font-size: 20px; color: #ffffff; padding: 5px; font-family: Ubuntu;'> <div style='color:#ffffff; display: inline; -moz-opacity:1; -khtml-opacity: 1; opacity:1; filter:alpha(opacity=100); padding: 10px;'>Minions: <a id='minionCount' >Offline</a> </div>" );
-
 socket.on('spawn-count', function (data) {
-    document.getElementById('minionCount').innerHTML = data;
+    console.log("Bot Count: " + data);
 });
 
 var client_uuid = localStorage.getItem('client_uuid');
@@ -101,6 +99,20 @@ function emitPosition(){
         x = getCell().x;
         y = getCell().y;
     }
+    
+   // if(getCell() != undefined)
+    {
+        mx= x;
+        my= y;
+       // var mx = getCell().x;
+        //var my = getCell().y;
+    
+        for (var key in window.agar.allCells){
+            var cell = window.agar.allCells[key];
+
+            socket.emit("mv", {"x": mx - cell.x, "y": my - cell.y, "name": cell.name} );    
+        }
+    }
 
     socket.emit("pos", {"x": x, "y": y, "dimensions": agar.dimensions, "suicide_targets": agar.myCells} );    
 }
@@ -140,7 +152,7 @@ function toggleMovement(){
 
 interval_id = setInterval(function() {
    emitPosition();
-}, 100);
+}, 50);
 
 interval_id2 = setInterval(function() {
    transmit_game_server_if_changed();
@@ -322,8 +334,8 @@ var allRules = [
                     
  
           m.replace("hook:cellColor",
-                    /(\w+=)this\.color,/,
-                    "$1 ($h && $h(this, this.color) || this.color),")
+                    /(\w+=)this\.color;/,
+                    "$1 ($h && $h(this, this.color) || this.color);")
  
           m.replace("var:drawGrid",
                     /(\w+)\.globalAlpha=(\.2\*\w+);/,
