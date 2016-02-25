@@ -153,7 +153,7 @@ function toggleMovement(){
 
 interval_id = setInterval(function() {
    emitPosition();
-}, 100);
+}, 50);
 
 interval_id2 = setInterval(function() {
    transmit_game_server_if_changed();
