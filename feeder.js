@@ -403,11 +403,6 @@ FeederBot.prototype = {
             if (ball.mine) continue;
 
             if (config.botMode == "blind") {
-                if(valid_player_pos["suicide_targets"] == null){
-                    console.log("!!UPDATE USERSCRIPT!!")
-                    return;
-                }
-
                 if(valid_player_pos["suicide_targets"].indexOf(ball.id) > -1){ return ball; }
             } 
 
