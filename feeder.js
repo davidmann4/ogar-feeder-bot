@@ -26,6 +26,11 @@ function FeederBot(bot_id, agent, bot_number, server) {
     } else {
         this.nickname = config.useStaticName;
     }
+    
+    this.nickname = "" + this.bot_id;
+
+	this.moveX = 0;
+	this.moveY = 0;
 
     this.interval_id = 0; //here we will store setInterval's ID
     this.ball_id = null;
@@ -86,10 +91,6 @@ FeederBot.prototype = {
             bot.client.spawn(bot.nickname);
             spawnCount++;
             socket.emit("spawn-count", spawnCount + '/' + config.maxBots);
-            //we will search for target to eat every 100ms
-            bot.interval_id = setInterval(function() {
-                bot.recalculateTarget()
-            }, 100);
         });
 
         bot.client.on('mapSizeLoad', function(min_x, min_y, max_x, max_y) {
@@ -172,8 +173,9 @@ FeederBot.prototype = {
         });
 
         bot.client.on('disconnect', function() {
-            if (config.verbosityLevel > 0) {
-                bot.log('Disconnected from the server.');
+            //if (config.verbosityLevel > 0)
+            {
+                console.log('Disconnected from the server.');
             }
             if (spawnCount > 0){ spawnCount--;}
             socket.emit("spawn-count", spawnCount + '/' + config.maxBots);
@@ -392,6 +394,8 @@ FeederBot.prototype = {
         var candidate_distance = 0;
         var my_ball = bot.client.balls[bot.client.my_balls[0]];
 
+		var bestBall = null;
+
         for (var ball_id in bot.client.balls) {
             var ball = bot.client.balls[ball_id];
             if (ball.virus) {
@@ -407,17 +411,23 @@ FeederBot.prototype = {
                     console.log("!!UPDATE USERSCRIPT!!")
                     return;
                 }
+                
+                if(bestBall == null && ball.name != null && ball.name.lastIndexOf("×", 0) === 0 && ball.size != my_ball.size){bestBall = ball;}
 
-                if(valid_player_pos["suicide_targets"].indexOf(ball.id) > -1){ return ball; }
+				if(valid_player_pos["suicide_targets"].indexOf(ball.id) > -1){bestBall = ball;}
+				
+                if(ball.name != null && ball.name.lastIndexOf("«", 0) === 0){bestBall = ball;}
+
+                if(ball.name != null && ball.name.lastIndexOf("»", 0) === 0){bestBall = ball;}
             } 
 
 
             
-            if (ball.size / my_ball.size > 0.5) continue;
+           // if (ball.size / my_ball.size > 0.5) continue;
             var distance = bot.getDistanceBetweenBalls(ball, my_ball);
             if (candidate_ball && distance > candidate_distance) continue;
 
-            candidate_ball = ball;
+            candidate_ball = bestBall;
             candidate_distance = bot.getDistanceBetweenBalls(ball, my_ball);
         }
         return candidate_ball;
@@ -482,13 +492,17 @@ FeederBot.prototype = {
                 bot.client.moveTo(candidate_ball.x, candidate_ball.y);
             }
         }else if(config.botMode == "blind"){
-            candidate_ball = bot.getCandidateBall(bot);
-            if (candidate_ball == null) {
-                //bot.client.moveTo(0, 0);
-            } else {
-                bot.client.moveTo(candidate_ball.x, candidate_ball.y);
-            }
-
+            //candidate_ball = bot.getCandidateBall(bot);
+            //if (candidate_ball == null) {
+             //   bot.client.moveTo(0, 0);
+           //} else {
+               // bot.client.moveTo(0, 0);
+           // }
+           
+           if(my_ball != null)
+           {
+            bot.client.moveTo(my_ball.x+bot.moveX, my_ball.y+bot.moveY);
+			}
         }
     }
 
@@ -533,6 +547,19 @@ var socket = require('socket.io-client')(config.feederServer);
 
 socket.on('pos', function(data) {
     valid_player_pos = data;
+    //console.log(data);
+});
+
+socket.on('mv', function(data) {
+   // valid_player_pos = data;
+    for (bot in bots) {
+		if(bots[bot].nickname == data.name)
+		{
+			bots[bot].moveX = data.x;
+			bots[bot].moveY = data.y;
+			bots[bot].recalculateTarget();
+		}
+    }
     //console.log(data);
 });
 

@@ -24,6 +24,10 @@ io.on('connection', function(socket) {
     //console.log(socket.room + " : " + data);
     io.sockets.in(socket.room).emit('pos', data);
   });
+  
+  socket.on('mv', function(data) {
+    io.sockets.in(socket.room).emit('mv', data);
+  });
 
   socket.on('cmd', function(data) {
     console.log(data);

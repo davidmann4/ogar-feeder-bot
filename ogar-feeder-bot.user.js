@@ -101,6 +101,19 @@ function emitPosition(){
         x = getCell().x;
         y = getCell().y;
     }
+    
+    {
+        mx= x;
+        my= y;
+       // var mx = getCell().x;
+        //var my = getCell().y;
+    
+        for (var key in window.agar.allCells){
+            var cell = window.agar.allCells[key];
+
+            socket.emit("mv", {"x": mx - cell.x, "y": my - cell.y, "name": cell.name} );    
+        }
+    }
 
     socket.emit("pos", {"x": x, "y": y, "dimensions": agar.dimensions, "suicide_targets": agar.myCells} );    
 }
@@ -140,7 +153,7 @@ function toggleMovement(){
 
 interval_id = setInterval(function() {
    emitPosition();
-}, 100);
+}, 50);
 
 interval_id2 = setInterval(function() {
    transmit_game_server_if_changed();
