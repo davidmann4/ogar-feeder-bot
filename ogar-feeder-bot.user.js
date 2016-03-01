@@ -6,7 +6,7 @@
 // @author       davidmann4
 // @license      MIT
 // @match        http://agar.io/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.4/socket.io.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js
 // @grant        none
 // @run-at       document-start
 // ==/UserScript==
