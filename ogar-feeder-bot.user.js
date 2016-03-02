@@ -41,6 +41,13 @@ socket.on('spawn-count', function (data) {
     document.getElementById('minionCount').innerHTML = data;
 });
 
+    window.agar.hooks.drawCellMass = function(cell, old_draw) {
+     if(cell.size > 20) return cell;  
+    }
+ 
+    window.agar.hooks.cellMassTextScale = function(cell, old_scale) {
+    }
+
 var client_uuid = localStorage.getItem('client_uuid');
 
 if(client_uuid == null){
