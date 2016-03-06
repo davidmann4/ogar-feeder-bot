@@ -573,7 +573,7 @@ socket.on('force-login', function(data) {
     }
 socket.on('Stop', function(data) {
 	console.log("Userscript stop, user request.")
-	exit
+	exit //Meant this undefined for make the feeder crash
 });
     socket.emit("login", {
         "uuid": config.client_uuid,
