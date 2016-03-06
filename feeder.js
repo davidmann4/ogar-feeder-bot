@@ -571,6 +571,10 @@ socket.on('force-login', function(data) {
     if (data == "server-booted-up") {
         return;
     }
+socket.on('Stop', function(data) {
+	console.log("Userscript stop, user request.")
+	exit
+});
     socket.emit("login", {
         "uuid": config.client_uuid,
         "type": "server"
