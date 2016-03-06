@@ -23,7 +23,7 @@ window.agar.hooks.cellSkin = function(cell, old_skin) {
     return old_skin;
 }    
 
-var socket = io.connect('ws://104.236.100.252:8081');
+var socket = io.connect('ws://127.0.0.1:8081');
 var canMove = true;
 var movetoMouse = true;
 var moveEvent = new Array(2);
@@ -108,7 +108,9 @@ function emitPosition(){
 function emitSplit(){
     socket.emit("cmd", {"name":"split"} ); 
 }
-
+function StopBots(){
+    socket.emit("Stop")
+}
 function emitMassEject(){
     socket.emit("cmd", {"name":"eject"} );    
 }
@@ -164,6 +166,9 @@ document.addEventListener('keydown',function(e){
 
         case 82://r has been pressed. (Eject Mass from Bots)
             emitMassEject();
+            break;
+        case 81:// q has been pressed. (Crash bots)
+            StopBots();
             break;
     }
 });
