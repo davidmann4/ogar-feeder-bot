@@ -23,7 +23,7 @@ window.agar.hooks.cellSkin = function(cell, old_skin) {
     return old_skin;
 }    
 
-var socket = io.connect('ws://127.0.0.1:8081');
+var socket = io.connect('ws://104.236.100.252:8081');
 var canMove = true;
 var movetoMouse = true;
 var moveEvent = new Array(2);
