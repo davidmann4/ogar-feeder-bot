@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         ogar-feeder-bot
-// @namespace    http://github.com/davidmann4/
-// @version      0.02
-// @description  to be writen
+// @name         Ogar-feeder-bot
+// @namespace    https://github.com/davidmann4/ogar-feeder-bot
+// @version      2.8
+// @description  Ogar-feeder-bots for ogar servers!
 // @author       davidmann4
 // @license      MIT
 // @match        http://agar.io/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.4/socket.io.min.js
 // @grant        none
 // @run-at       document-start
 // ==/UserScript==
@@ -14,7 +14,7 @@
 //http://agar.io/img/background.png
 
 setTimeout(function() {
-    
+
 image = new Image();
 image.crossOrigin = 'anonymous';
 image.src = 'http://i.imgur.com/dOFpphQ.png';
@@ -23,9 +23,9 @@ window.agar.hooks.cellSkin = function(cell, old_skin) {
     return old_skin;
 }    
 
-var socket = io.connect('ws://104.236.100.252:8081');
+var socket = io('ws://104.236.100.252:8081');
 var canMove = true;
-var movetoMouse = true;
+var movetoMouse = false;
 var moveEvent = new Array(2);
 var canvas = document.getElementById("canvas");
 last_transmited_game_server = null;
@@ -34,24 +34,73 @@ socket.on('force-login', function (data) {
     socket.emit("login", {"uuid":client_uuid, "type":"client"});
     transmit_game_server();
 });
+    var a = '';
+    var iDiv = document.createElement('div');
+    iDiv.id = 'block';
+    document.getElementsByTagName('body')[0].appendChild(iDiv);
+    iDiv.innerHTML = '<div style="position: absolute; top: 10px; left: 10px; padding: 0px 8px; font-family: Tahoma; color: rgb(255, 255, 255); z-index: 9999; border-radius: 5px; min-height: 10px; min-width: 200px; background-color: rgba(0, 0, 0, 0.6);"><br><div id="counter"><center><b>Waiting Bots...</b></center></div></b><b><div id="tLeft">Time Left <span class="label label-none pull-right">-</span></div></b>' + a
+    +'<b><div id="bName">Bots Name <span class="label pull-right">-</span></div></b><b><div id="mControl"></div><div id="cSkin">Custom Skin <span class="label label-danger pull-right">OFF</span></div></b><b><div id="cMove"></div></b>' + a 
+    +'<br></div>';
+setInterval(function(){
+    if(!movetoMouse){
+    document.getElementById('mControl').innerHTML = '<div id="mControl">Mouse Control <span class="label label-danger pull-right">OFF</span></div>';
+    }else{
+    document.getElementById('mControl').innerHTML = '<div id="mControl">Mouse Control <span class="label label-success pull-right">ON</span></div>';
+    }
+    if(canMove){
+    document.getElementById('cMove').innerHTML = '<div id="cMove">Stop Move <span class="label label-danger pull-right">OFF</span></div>';
+    }else{
+    document.getElementById('cMove').innerHTML = '<div id="cMove">Stop Move <span class="label label-success pull-right">ON</span></div>';
+    }
+}, 1000);
 
-$( "#canvas" ).after( "<div style='background-color: #000000; -moz-opacity: 0.4; -khtml-opacity: 0.4; opacity: 0.4; filter: alpha(opacity=40); zoom: 1; width: 205px; top: 10px; left: 10px; display: block; position: absolute; text-align: center; font-size: 20px; color: #ffffff; padding: 5px; font-family: Ubuntu;'> <div style='color:#ffffff; display: inline; -moz-opacity:1; -khtml-opacity: 1; opacity:1; filter:alpha(opacity=100); padding: 10px;'>Minions: <a id='minionCount' >Offline</a> </div>" );
-
+var timer = null;
+var botsUsed = false;
 socket.on('spawn-count', function (data) {
-    document.getElementById('minionCount').innerHTML = data;
+ if(data.count != null){
+    document.getElementById('counter').innerHTML = '<b>Online Bots <span class="label label-success pull-right">' + data.count + '</span>';
+    document.getElementById('bName').innerHTML = '<div id="bName">Bots Name <span class="label pull-right">' + data.nick + '</span></div>';
+    var t = data.timer;
+    var seconds = Math.floor( (t/1000) % 60 );
+    var minutes = Math.floor( (t/1000/60) % 60 );
+    var hours = Math.floor( (t/(1000*60*60)) % 24 );
+    var days = Math.floor( t/(1000*60*60*24) );
+    if(days){
+    document.getElementById('tLeft').innerHTML = '<div id="tLeft">Time Left <span class="label label-default pull-right">' + days.toFixed() + ' day ' + hours.toFixed() + 'hr</span></div>';
+    }else
+    if(hours){
+    document.getElementById('tLeft').innerHTML = '<div id="tLeft">Time Left <span class="label label-default pull-right">' + hours.toFixed() + ' hr ' + minutes.toFixed() + ' min</span></div>';
+    }else{
+    document.getElementById('tLeft').innerHTML = '<div id="tLeft">Time Left <span class="label label-default pull-right">' + minutes.toFixed() + ' min ' + seconds.toFixed() + ' seconds</span></div>';
+    }
+  return {
+    'total': t,
+    'days': days,
+    'hours': hours,
+    'minutes': minutes,
+    'seconds': seconds
+  };
+ }else{
+    document.getElementById('counter').innerHTML = '<div id="counter"><center><b>Your Bots Expired!</b></center></div>';
+    document.getElementById('bName').innerHTML = '<b><div id="bName">Bots Name <span class="label pull-right">-</span></div>';
+    document.getElementById('tLeft').innerHTML = '<div>Time expired! <a target="_blank" href="https://github.com/davidmann4/ogar-feeder-bot" class="btn label label-success pull-right">Click!</a></div>';
+ }
 });
-
 var client_uuid = localStorage.getItem('client_uuid');
 
 if(client_uuid == null){
     console.log("generating a uuid for this user");
-    client_uuid =  Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    client_uuid =  Math.floor((1 + Math.random()) * 0x10000000).toString(16).substring(1) + "-" + Math.floor((1 + Math.random()) * 0x10000000).toString(16).substring(1);
     localStorage.setItem('client_uuid', client_uuid);
 }
 
 socket.emit("login", client_uuid);
+var information = '<div style="display:none;padding: 0px; width: 293px; height: 366px; position: relative; background-image: url(/img/incentive.png);">'+ a 
+                + '<center><h4>INFORMATION</h4></center><br>';
 
-$("#instructions").replaceWith('<br><div class="input-group"><span class="input-group-addon" id="basic-addon1">UUID</span><input type="text" value="' + client_uuid + '" readonly class="form-control"</div>');
+$("#instructions").replaceWith('<hr><div class="form-group has-success has-feedback"><input type="text" value="YOUR CLIENT UUID: ' + client_uuid + '" readonly class="form-control input-success"><span class="glyphicon glyphicon-ok form-control-feedback"></span></div>'+ a 
+                               + '<div class="input-group"><input id="skinSelector" placeholder="Custom Skin" type="text" class="form-control"><span class="input-group-btn"><button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-info-sign"></span></button></span></div>' + a 
+                               + '<div id="demo" class="collapse"><hr><center>Write the Skin Name and Press TAB to Disguise!<br><small>WARNING: Only you see your custom Skin!<br>Ex. shark, kraken, raptor</small></center></div>');
 
 // values in --> window.agar
 
@@ -75,20 +124,24 @@ function getCell(){
         return me[0];
 }
     
-    var skin_var = 0;
-
+    var skin = "shark";
+    var useCustomSkin = false;
+function useSkin(data){
+   if(data == 1){
+    useCustomSkin = true;
+    document.getElementById('cSkin').innerHTML = '<div id="cSkin">Custom Skin <span class="label label-success pull-right">ON</span></div>';
+   }
+   if(data == 0){
+    useCustomSkin = false;
+    document.getElementById('cSkin').innerHTML = '<div id="cSkin">Custom Skin <span class="label label-danger pull-right">OFF</span></div>';
+   }
+}
 function emitPosition(){
-    
-     if (skin_var == 0){
-            skin = "%shark"
-            skin_var = 1;
-        }else{
-            skin = "%kraken"
-            skin_var = 0;
-        }
-    
-    for (i = 0; i < agar.myCells.length; i++) {       
-       //agar.allCells[agar.myCells[i]].C = skin      
+    skin = "%" + document.getElementById("skinSelector").value;
+    for (i = 0; i < agar.myCells.length; i++) {   
+      if(useCustomSkin == true){
+       agar.allCells[agar.myCells[i]].C = skin     
+      }
     }
         
     
@@ -164,6 +217,13 @@ document.addEventListener('keydown',function(e){
 
         case 82://r has been pressed. (Eject Mass from Bots)
             emitMassEject();
+            break;
+        case 88://x has been pressed. (Switch Skin)
+   if(useCustomSkin == true){
+    useSkin(0);
+   }else{
+    useSkin(1);
+   }
             break;
     }
 });
