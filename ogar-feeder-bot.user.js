@@ -197,43 +197,38 @@ var allRules = [
       scriptUriRe: /^http:\/\/agar\.io\/main_out\.js/,
       replace: function (m) {
           m.removeNewlines()
- 
+
           m.replace("var:allCells",
                     /(=null;)(\w+)(.hasOwnProperty\(\w+\)?)/,
                     "$1" + "$v=$2;" + "$2$3",
                     "$v = {}")
- 
+
           m.replace("var:myCells",
                     /(case 32:)(\w+)(\.push)/,
                     "$1" + "$v=$2;" + "$2$3",
                     "$v = []")
- 
+
           m.replace("var:top",
                     /case 49:[^:]+?(\w+)=\[];/,
                     "$&" + "$v=$1;",
                     "$v = []")
- 
-          m.replace("var:ws",
-                    /new WebSocket\((\w+)[^;]+?;/,
-                    "$&" + "$v=$1;",
-                    "$v = ''")
- 
+
           m.replace("var:topTeams",
                     /case 50:(\w+)=\[];/,
                     "$&" + "$v=$1;",
                     "$v = []")
- 
+
           var dr = "(\\w+)=\\w+\\.getFloat64\\(\\w+,!0\\);\\w+\\+=8;\\n?"
           var dd = 7071.067811865476
-          m.replace("var:dimensions",
+          m.replace("var:dimensions hook:dimensionsUpdated",
                     RegExp("case 64:"+dr+dr+dr+dr),
-                    "$&" + "$v = [$1,$2,$3,$4],",
+                    "$&" + "$v = [$1,$2,$3,$4],$H($1,$2,$3,$4),",
                     "$v = " + JSON.stringify([-dd,-dd,dd,dd]))
- 
+
           var vr = "(\\w+)=\\w+\\.getFloat32\\(\\w+,!0\\);\\w+\\+=4;"
           m.save() &&
               m.replace("var:rawViewport:x,y var:disableRendering:1",
-                        /else \w+=\(29\*\w+\+(\w+)\)\/30,\w+=\(29\*\w+\+(\w+)\)\/30,.*?;/,
+                        /else \w+=\(5\*\w+\+(\w+)\)\/6,\w+=\(5\*\w+\+(\w+)\)\/6,.*?;/,
                         "$&" + "$v0.x=$1; $v0.y=$2; if($v1)return;") &&
               m.replace("var:disableRendering:2 hook:skipCellDraw",
                         /(\w+:function\(\w+\){)(if\(this\.\w+\(\)\){\+\+this\.[\w$]+;)/,
@@ -247,22 +242,21 @@ var allRules = [
               m.reset_("window.agar.rawViewport = {x:0,y:0,scale:1};" +
                        "window.agar.disableRendering = false;") ||
               m.restore()
-              
-              
- 
-          m.replace("reset",
-                    /new WebSocket\(\w+[^;]+?;/,
-                    "$&" + m.reset)
- 
+
+          m.replace("reset hook:connect var:ws var:webSocket",
+                    /new WebSocket\((\w+)\);/,
+                    "$v1 = $&; $v0=$1;" + m.reset + "$H();",
+                    "$v0 = ''; $v1 = null;")
+
           m.replace("property:scale",
                     /function \w+\(\w+\){\w+\.preventDefault\(\);[^;]+;1>(\w+)&&\(\1=1\)/,
                     `;${makeProperty("scale", "$1")};$&`)
- 
+
           m.replace("var:minScale",
                     /;1>(\w+)&&\(\1=1\)/,
                     ";$v>$1 && ($1=$v)",
                     "$v = 1")
- 
+
           m.replace("var:region",
                     /console\.log\("Find "\+(\w+\+\w+)\);/,
                     "$&" + "$v=$1;",
@@ -271,32 +265,27 @@ var allRules = [
           m.replace("cellProperty:isVirus",
                     /((\w+)=!!\(\w+&1\)[\s\S]{0,400})((\w+).(\w+)=\2;)/,
                     "$1$4.isVirus=$3")
- 
+
           m.replace("var:dommousescroll",
                     /("DOMMouseScroll",)(\w+),/,
                     "$1($v=$2),")
- 
+
           m.replace("var:skinF hook:cellSkin",
                     /(\w+.fill\(\))(;null!=(\w+))/,
                     "$1;" +
                     "if($v)$3 = $v(this,$3);" +
                     "if($h)$3 = $h(this,$3);" +
                     "$2");
- 
-          /*m.replace("bigSkin",
-                    /(null!=(\w+)&&\((\w+)\.save\(\),)(\3\.clip\(\),\w+=)(Math\.max\(this\.size,this\.\w+\))/,
-                    "$1" + "$2.big||" + "$4" + "($2.big?2:1)*" + "$5")*/
- 
+
           m.replace("hook:afterCellStroke",
                     /\((\w+)\.strokeStyle="#000000",\1\.globalAlpha\*=\.1,\1\.stroke\(\)\);\1\.globalAlpha=1;/,
                     "$&" + "$H(this);")
- 
+
           m.replace("var:showStartupBg",
                     /\w+\?\(\w\.globalAlpha=\w+,/,
                     "$v && $&",
                     "$v = true")
-          
- 
+
           var vAlive = /\((\w+)\[(\w+)\]==this\){\1\.splice\(\2,1\);/.exec(m.text)
           var vEaten = /0<this\.[$\w]+&&(\w+)\.push\(this\)}/.exec(m.text)
           !vAlive && console.error("Expose: can't find vAlive")
@@ -306,11 +295,11 @@ var allRules = [
                         RegExp(vAlive[1] + "=\\[\\];" + vEaten[1] + "=\\[\\];"),
                         "$v0=" + vAlive[1] + "=[];" + "$v1=" + vEaten[1] + "=[];",
                         "$v0 = []; $v1 = []")
- 
+
           m.replace("hook:drawScore",
                     /(;(\w+)=Math\.max\(\2,(\w+\(\))\);)0!=\2&&/,
                     "$1($H($3))||0!=$2&&")
- 
+
           m.replace("hook:beforeTransform hook:beforeDraw var:drawScale",
                     /(\w+)\.save\(\);\1\.translate\((\w+\/2,\w+\/2)\);\1\.scale\((\w+),\3\);\1\.translate\((-\w+,-\w+)\);/,
                     "$v = $3;$H0($1,$2,$3,$4);" + "$&" + "$H1($1,$2,$3,$4);",
@@ -319,29 +308,42 @@ var allRules = [
           m.replace("hook:afterDraw",
                     /(\w+)\.restore\(\);(\w+)&&\2\.width&&\1\.drawImage/,
                     "$H();" + "$&")
-                    
- 
+
           m.replace("hook:cellColor",
                     /(\w+=)this\.color,/,
                     "$1 ($h && $h(this, this.color) || this.color),")
- 
+
           m.replace("var:drawGrid",
                     /(\w+)\.globalAlpha=(\.2\*\w+);/,
                     "if(!$v)return;" + "$&",
                     "$v = true")
- 
+
           m.replace("hook:drawCellMass",
                     /&&\((\w+\|\|0==\w+\.length&&\(!this\.\w+\|\|this\.\w+\)&&20<this\.size)\)&&/,
                     "&&( $h ? $h(this,$1) : ($1) )&&")
- 
+
           m.replace("hook:cellMassText",
                     /(\.\w+)(\(~~\(this\.size\*this\.size\/100\)\))/,
                     "$1( $h ? $h(this,$2) : $2 )")
- 
+
           m.replace("hook:cellMassTextScale",
                     /(\.\w+)\((this\.\w+\(\))\)([\s\S]{0,1000})\1\(\2\/2\)/,
                     "$1($2)$3$1( $h ? $h(this,$2/2) : ($2/2) )")
- 
+
+          m.replace("var:enableDirectionSending",
+                    /;64>(\w+)\*\1\+(\w+)\*\2/,
+                    ";if(!$v)return" + "$&",
+                    "$v = true")
+
+          m.replace("var:simpleCellDraw",
+                    /(:function\(\){)(var a=10;)/,
+                    "$1 if($v)return true;$2",
+                    "$v=false")
+
+          m.replace("hook:updateLeaderboard",
+                    /({\w+=null;)(if\(null!=)/,
+                    "$1 if($H())return; $2")
+
           var template = (key,n) =>
               `this\\.${key}=\\w+\\*\\(this\\.(\\w+)-this\\.(\\w+)\\)\\+this\\.\\${n};`
           var re = new RegExp(template('x', 2) + template('y', 4) + template('size', 6))
@@ -352,24 +354,24 @@ var allRules = [
               m.cellProp.nSize = match[5]
           } else
               console.error("Expose: cellProp:x,y,size search failed!")
- 
+
       }},
 ]
- 
+
 function makeProperty(name, varname) {
     return "'" + name + "' in window.agar || " +
         "Object.defineProperty( window.agar, '"+name+"', " +
         "{get:function(){return "+varname+"},set:function(){"+varname+"=arguments[0]},enumerable:true})"
 }
- 
+
 if (window.top != window.self)
     return
- 
+
 if (document.readyState !== 'loading')
     return console.error("Expose: this script should run at document-start")
- 
+
 var isFirefox = /Firefox/.test(navigator.userAgent)
- 
+
 // Stage 1: Find corresponding rule
 var rules
 for (var i = 0; i < allRules.length; i++)
@@ -379,8 +381,8 @@ for (var i = 0; i < allRules.length; i++)
     }
 if (!rules)
     return console.error("Expose: cant find corresponding rule")
- 
- 
+
+
 // Stage 2: Search for `main_out.js`
 if (isFirefox) {
     function bse_listener(e) { tryReplace(e.target, e) }
@@ -402,19 +404,19 @@ if (isFirefox) {
     var observer = new MutationObserver(observerFunc)
     observer.observe(document.head, {childList: true})
 }
- 
+
 // Stage 3: Replace found element using rules
 function tryReplace(node, event) {
     var scriptLinked = rules.scriptUriRe && rules.scriptUriRe.test(node.src)
     var scriptEmbedded = rules.scriptTextRe && rules.scriptTextRe.test(node.textContent)
     if (node.tagName != "SCRIPT" || (!scriptLinked && !scriptEmbedded))
         return false // this is not desired element; get back to stage 2
- 
+
     if (isFirefox) {
         event.preventDefault()
         window.removeEventListener('beforescriptexecute', bse_listener, true)
     }
- 
+
     var mod = {
         reset: "",
         text: null,
@@ -467,7 +469,7 @@ function tryReplace(node, event) {
             }
         },
         removeNewlines() {
-            this.text = this.text.replace(/([,\/])\n/mg, "$1")            
+            this.text = this.text.replace(/([,\/;])\n/mg, "$1")
         },
         get: function() {
             var cellProp = JSON.stringify(this.cellProp)
@@ -475,7 +477,7 @@ function tryReplace(node, event) {
                 this.reset + this.text
         }
     }
- 
+
     if (scriptEmbedded) {
         mod.text = node.textContent
         rules.replace(mod)
@@ -509,6 +511,6 @@ function tryReplace(node, event) {
         request.open("get", node.src, true)
         request.send()
     }
- 
+
     return true
 }
