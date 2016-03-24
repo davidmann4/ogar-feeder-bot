@@ -13,18 +13,6 @@
 
 //http://agar.io/img/background.png
 
-// ==UserScript==
-// @name         Bots
-// @namespace    
-// @version      1.0
-// @description  Agar.io bots script
-// @author       SrNicolas
-// @match        http://agar.io/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js
-// @grant        none
-// @run-at       document-start
-// ==/UserScript==
-
 setTimeout(function() {
     var real_minx = -7071;
     var real_miny = -7071;
