@@ -1,24 +1,10 @@
 // ==UserScript==
-// @name         ogar-feeder-bot
+// @name         agario-feeder-bot
 // @namespace    http://github.com/davidmann4/
 // @version      0.02
 // @description  to be writen
 // @author       davidmann4
 // @license      MIT
-// @match        http://agar.io/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js
-// @grant        none
-// @run-at       document-start
-// ==/UserScript==
-
-//http://agar.io/img/background.png
-
-// ==UserScript==
-// @name         Bots
-// @namespace    
-// @version      1.0
-// @description  Agar.io bots script
-// @author       SrNicolas
 // @match        http://agar.io/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js
 // @grant        none
@@ -95,7 +81,7 @@ setTimeout(function() {
         offset_x = real_minx || -7071;
         offset_y = real_miny || -7071
     };
-    var socket = io.connect('ws://104.236.100.252:8081:8081');
+    var socket = io.connect('ws://104.236.100.252:8081');
     var canMove = true;
     var movetoMouse = true;
     var moveEvent = new Array(2);
