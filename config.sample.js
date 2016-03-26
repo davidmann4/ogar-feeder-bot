@@ -7,7 +7,7 @@ config.account = {};
 config.verbosityLevel = 1;
 
 // Useragent the bot will use
-config.userAgent = 'ogar-feeder-bot';
+config.userAgent = 'agario-feeder-bot';
 
 // the feederServer connects your node script with your browser (mouse coordinates & commands)
 // you can use the public server or run your own node server/server.js
@@ -26,7 +26,7 @@ config.onboardingTimer = 5000;
 config.maxBots = 128;
 
 config.useRandomSkinName = true; // Set to true to use random name
-config.useStaticName = "OgarFeederBot"; // If above is false, us this skin name
+config.useStaticName = "AgarioFeederBot"; // If above is false, us this skin name
 
 // The bot can have different AI modes:
 // * default 	Bot will follow your mouse and listen to SPlit and eject commands
