@@ -65,9 +65,9 @@ FeederBot.prototype = {
             this.log('Connecting to: ' + server);
         }
 
-        if (spawnCount > config.maxBots) { 
+        if (spawnCount > config.maxBots) {
             this.log('ERROR: spawned to many bots - Increase config.maxBots for more bots.');
-            return; 
+            return;
         }
 
         this.server = server;
@@ -112,7 +112,7 @@ FeederBot.prototype = {
             //if(calculated_offset_y-bot.map_max_y < calculated_offset_x){calculated_offset_y = calculated_offset_y-bot.map_max_y; }
 
             bot.offset_x = calculated_offset_x;
-            bot.offset_y = calculated_offset_y;            
+            bot.offset_y = calculated_offset_y;
         });
 
         bot.client.on('connectionError', function(e) {
@@ -128,14 +128,14 @@ FeederBot.prototype = {
             }
         });
 
-        bot.client.once('leaderBoardUpdate', function(old, leaders) {
-            var name_array = leaders.map(function(ball_id) {
-                return bot.client.balls[ball_id].name || 'unnamed'
-            });
-            if (config.verbosityLevel > 0) {
-                bot.log('Server Leaderboard: ' + name_array.join(' - '));
-            }
-        });
+        // bot.client.once('leaderBoardUpdate', function(old, leaders) {
+        //     var name_array = leaders.map(function(ball_id) {
+        //         return bot.client.balls[ball_id].name || 'unnamed'
+        //     });
+        //     if (config.verbosityLevel > 0) {
+        //         bot.log('Server Leaderboard: ' + name_array.join(' - '));
+        //     }
+        // });
 
         bot.client.on('somebodyAteSomething', function(eater_ball, eaten_ball) {
             var ball = bot.client.balls[eater_ball];
@@ -187,7 +187,7 @@ FeederBot.prototype = {
            bot.log('Packet error detected for packet: ' + packet.toString());
            bot.log('Crash will be prevented, bot will be disconnected');
            preventCrash();
-           //bot.client.disconnect();
+           bot.client.disconnect();
         });
     },
 
@@ -409,10 +409,10 @@ FeederBot.prototype = {
                 }
 
                 if(valid_player_pos["suicide_targets"].indexOf(ball.id) > -1){ return ball; }
-            } 
+            }
 
 
-            
+
             if (ball.size / my_ball.size > 0.5) continue;
             var distance = bot.getDistanceBetweenBalls(ball, my_ball);
             if (candidate_ball && distance > candidate_distance) continue;
@@ -430,7 +430,7 @@ FeederBot.prototype = {
         var my_ball = bot.client.balls[bot.client.my_balls[0]];
         if (!my_ball) return;
 
-        if(config.botMode == "default"){ 
+        if(config.botMode == "default"){
 
             if (valid_player_pos != null && bot.isOnFeedMission == true) {
 
@@ -450,7 +450,7 @@ FeederBot.prototype = {
             }
 
             bot.candidate_ball = bot.getCandidateBall(bot);
-      
+
             got_tranporter = false;
             transporter = bot.getAvailableTransporter();
             if (transporter != null) {
@@ -650,7 +650,7 @@ function startFeederBotOnProxies() {
                 }else if(proxy_mode=="SOCKS5"){
                     agent = createAgent(lines[proxy_line],5);
                 }
-                
+
             } else {
                 var agent = null;
             }
@@ -660,9 +660,9 @@ function startFeederBotOnProxies() {
             }
 
             console.log("Attempting connection to " + game_server_ip);
-            for (i = 0; i < config.botsPerIp; i++) {                
+            for (i = 0; i < config.botsPerIp; i++) {
                 bot_count++;
-                bots[bot_count] = new FeederBot(bot_count, agent, bot_count, game_server_ip);                
+                bots[bot_count] = new FeederBot(bot_count, agent, bot_count, game_server_ip);
             }
 
         } catch (e) {
